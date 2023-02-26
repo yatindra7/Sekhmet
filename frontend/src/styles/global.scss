@@ -4,9 +4,8 @@
     line-height: 24px;
     font-weight: 400;
   
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    color: $text;
+    background-color: $background;
   
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -19,13 +18,4 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-.App {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    font-weight: 700;
 }
