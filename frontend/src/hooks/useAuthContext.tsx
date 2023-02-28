@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name: 'Sarita Singhania',
       role: 'Doctor'
     })
+    navigate("/")
   };
 
   const logoutHandler = () => {
@@ -43,19 +44,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     delete axios.defaults.headers.common.authorizationtoken;
     setUser(undefined);
     setIsAuthenticated(false);
+    navigate("/login")
   };
 
   useEffect(() => {
     const authToken = localStorage.getItem('authorizationtoken');
     if (authToken !== null) {
       axios.defaults.headers.common.authorizationtoken = authToken;
+      setUser({
+        id: 1,
+        name: 'Sarita Singhania',
+        role: 'Doctor'
+      })
     }
-
-    setUser({
-      id: 1,
-      name: 'Sarita Singhania',
-      role: 'Doctor'
-    })
+    else {
+      navigate("/login")
+    }
   }, [navigate]);
 
   const value = useMemo(
