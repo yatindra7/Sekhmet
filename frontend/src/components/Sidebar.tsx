@@ -1,10 +1,12 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { BiHomeAlt } from 'react-icons/bi'
-import { RiAdminLine, RiHotelBedFill, RiStethoscopeLine } from 'react-icons/ri'
+import { RiAdminLine, RiHotelBedFill, RiLogoutBoxRLine, RiStethoscopeLine } from 'react-icons/ri'
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function Sidebar() {
 
     let navigate = useNavigate();
+    let { logoutHandler } = useAuthContext();
 
     return(
         <div className="sidebar">
@@ -14,6 +16,9 @@ function Sidebar() {
                 <NavLink to="/doctor"><RiStethoscopeLine size={30} /></NavLink>
                 <NavLink to="/patient"><RiHotelBedFill size={30} /></NavLink>
                 <NavLink to="/admin"><RiAdminLine size={30} /></NavLink>
+            </div>
+            <div className="logout">
+                <RiLogoutBoxRLine size={30} onClick={() => logoutHandler()} />
             </div>
         </div>
     )
