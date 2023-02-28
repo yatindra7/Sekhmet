@@ -5,6 +5,7 @@ import Patient from './pages/Patient';
 import Doctor from './pages/Doctor';
 import Home from './pages/Home';
 import { AuthProvider } from './hooks/useAuthContext';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />} >
               <Route index element={<Home />} />
               <Route path="/doctor" element={<Doctor />} />
