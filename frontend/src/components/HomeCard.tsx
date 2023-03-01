@@ -1,10 +1,11 @@
+import { IconType } from 'react-icons'
 import { HiTrendingDown, HiTrendingUp, HiUser } from 'react-icons/hi'
 
-function HomeCard(props: {title: string, count: number, percentChange: number, changeType: 'positive' | 'negative' | 'neutral', color: 'red'|'orange'|'green'|'blue'}) {
+function HomeCard(props: {title: string, count: number, percentChange: number, changeType: 'positive' | 'negative' | 'neutral', color: 'red'|'orange'|'green'|'blue', icon: IconType}) {
     return(
         <div className="home-card">
             <div className="top">
-                <div className='icon-wrapper' data-color={props.color}><HiUser size={30} /></div>
+                <div className='icon-wrapper' data-color={props.color}><props.icon size={30} /></div>
                 <div className='title'>{props.title}</div>
             </div>
             <div className='bottom'>
