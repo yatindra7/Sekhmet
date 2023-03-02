@@ -1,35 +1,66 @@
 .patient {
-    padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem;
 
-    .search {
+  .search {
+    position: relative;
 
-        position: relative;
+    input {
+      width: 100%;
+      outline: none;
+      border-radius: 5px;
+      padding: 0.8rem 1.2rem;
+      padding-left: 2.5rem;
+      font-size: 1.1rem;
+      background-color: transparent;
 
-        input {
-            width: 100%;
-            outline: none;
-            border-radius: 5px;
-            padding: 0.8rem 1.2rem;
-            padding-left: 2.5rem;
-            font-size: 1.1rem;
-            background-color: transparent;
-      
-            border: 1px solid rgba($text-light, 0.4);
-            color: $text;
-      
-            &:-webkit-autofill {
-              border: 1px solid rgba($text-light, 0.2);
-              box-shadow: 0 0 0px 1000px $background inset;
-              -webkit-text-fill-color: $text;
-            }
-        }
+      border: 1px solid rgba($text-light, 0.4);
+      color: $text;
 
-        &-icon {
-            position: absolute;
-            top: 50%;
-            left: 1rem;
-            transform: translateY(-50%);
-            color: $text;
-        }
+      &:-webkit-autofill {
+        border: 1px solid rgba($text-light, 0.2);
+        box-shadow: 0 0 0px 1000px $background inset;
+        -webkit-text-fill-color: $text;
+      }
     }
+
+    &-icon {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      color: $text;
+    }
+  }
+}
+
+.my-table {
+  width: 100%;
+  margin: 3.5rem 0;
+  border-collapse: collapse;
+  color: $text;
+
+  thead {
+    border-spacing: 0;
+    border-bottom: 2px solid rgba($text-light, 0.2);
+
+    th {
+      text-align: left;
+      padding: 0.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        border-spacing: 0;
+        padding: 0.8rem 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      &:nth-of-type(even) {
+        background-color: rgba($primary-light, 0.3);
+      }
+    }
+  }
 }
