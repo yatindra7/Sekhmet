@@ -3,6 +3,7 @@ import { BiSearch } from 'react-icons/bi';
 import { Column } from 'react-table';
 import Table from '../components/Table';
 import { PatientType } from '../types';
+import fuzzysort from 'fuzzysort';
 
 function Patient() {
   const [query, setQuery] = useState<string>('');
@@ -55,7 +56,10 @@ function Patient() {
     [],
   );
 
-  const data: PatientType[] = useMemo(() => patients, [patients]);
+  const data: PatientType[] = useMemo(
+    () => fuzzysort.go(query, patients, { key: 'name', all: true }).map((result) => result.obj),
+    [patients, query],
+  );
 
   return (
     <div className="patient">
