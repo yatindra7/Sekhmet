@@ -1,8 +1,16 @@
 .patient {
   padding: 1rem 1.5rem;
 
+  .top {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+
   .search {
     position: relative;
+    width: 100%;
 
     input {
       width: 100%;
@@ -30,6 +38,20 @@
       transform: translateY(-50%);
       color: $text;
     }
+  }
+
+  .add-btn {
+    width: 6rem;
+    margin-left: 1rem;
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    background-color: rgba($primary, 0.2);
+    color: rgba($primary-dark, 1);
+    cursor: pointer;
   }
 }
 

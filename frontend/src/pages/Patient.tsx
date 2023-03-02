@@ -4,8 +4,11 @@ import { Column } from 'react-table';
 import Table from '../components/Table';
 import { PatientType } from '../types';
 import fuzzysort from 'fuzzysort';
+import { useNavigate } from 'react-router-dom';
 
 function Patient() {
+  const navigate = useNavigate();
+
   const [query, setQuery] = useState<string>('');
   const [patients, setPatients] = useState<PatientType[]>([]);
 
@@ -63,15 +66,20 @@ function Patient() {
 
   return (
     <div className="patient">
-      <div className="search">
-        <BiSearch size={20} className="search-icon" />
-        <input
-          id="patient-query"
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type here to search patients..."
-        />
+      <div className="top">
+        <div className="search">
+          <BiSearch size={20} className="search-icon" />
+          <input
+            id="patient-query"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Type here to search patients..."
+          />
+        </div>
+        <button type="button" className="add-btn" onClick={() => navigate('/patient/new')}>
+          Add +
+        </button>
       </div>
       <Table columns={columns} data={data} />
     </div>
