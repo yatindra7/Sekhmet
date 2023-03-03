@@ -1,13 +1,23 @@
 .patient-details {
   padding: 1rem 1.5rem;
+  display: flex;
+  align-items: stretch;
+
+  .panel {
+    width: 50%;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
 
   .top {
-    max-width: 50%;
+    max-width: 100%;
     background-color: rgba($primary-light, 0.8);
     padding: 1rem 1.5rem;
     border-radius: 10px;
 
     display: flex;
+    flex: 0 1 auto;
     align-items: stretch;
 
     img {
@@ -54,5 +64,26 @@
 
       font-size: 1.1rem;
     }
+  }
+
+  .appointment {
+    min-height: calc(100vh - 9rem);
+    background-color: rgba($primary-light, 0.8);
+    border-radius: 10px;
+  }
+
+  .tests {
+    margin-top: 2rem;
+    flex: 1 1 auto;
+    background-color: rgba($primary-light, 0.8);
+    border-radius: 10px;
+  }
+
+  .title {
+    padding: 2rem 1.5rem 1rem 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid rgba($grey, 0.5);
   }
 }

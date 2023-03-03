@@ -38,33 +38,41 @@ function PatientDetails() {
 
   return (
     <div className="patient-details">
-      <div className="top">
-        <img src={`https://randomuser.me/api/portraits/men/${patientData.ssn % 100}.jpg`} alt={patientData.name} />
-        <div className="meta">
-          <div className="name">{patientData.name}</div>
-          <div className="secondary">Male, 24 years old</div>
-          <div className="doc">
-            <RiStethoscopeFill size={25} />
-            {patientData.primaryCarePhysician}
+      <div className="panel">
+        <div className="top">
+          <img src={`https://randomuser.me/api/portraits/men/${patientData.ssn % 100}.jpg`} alt={patientData.name} />
+          <div className="meta">
+            <div className="name">{patientData.name}</div>
+            <div className="secondary">Male, 24 years old</div>
+            <div className="doc">
+              <RiStethoscopeFill size={25} />
+              {patientData.primaryCarePhysician}
+            </div>
+            <div className="address">
+              <AiFillHome size={25} /> {patientData.address}
+            </div>
           </div>
-          <div className="address">
-            <AiFillHome size={25} /> {patientData.address}
+          <div className="contacts">
+            <div>
+              <strong>Phone: </strong>
+              {patientData.phone}
+            </div>
+            <div>
+              <strong>SSN: </strong>
+              {patientData.ssn}
+            </div>
+            <div>
+              <strong>Insurance: </strong>
+              {patientData.insuranceID}
+            </div>
           </div>
         </div>
-        <div className="contacts">
-          <div>
-            <strong>Phone: </strong>
-            {patientData.phone}
-          </div>
-          <div>
-            <strong>SSN: </strong>
-            {patientData.ssn}
-          </div>
-          <div>
-            <strong>Isurance: </strong>
-            {patientData.insuranceID}
-          </div>
+        <div className="tests">
+          <div className="title">Procedures and tests</div>
         </div>
+      </div>
+      <div className="panel appointment">
+        <div className="title">Appointments</div>
       </div>
     </div>
   );
