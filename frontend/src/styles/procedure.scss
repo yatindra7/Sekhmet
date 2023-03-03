@@ -1,0 +1,29 @@
+.procedure-details {
+  background-color: rgba($primary, 0.5);
+  margin: 1rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+
+  .row {
+    display: flex;
+
+    div {
+      width: 50%;
+    }
+  }
+
+  .info {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+
+    svg {
+      margin-right: 0.8rem;
+    }
+  }
+
+  .date {
+    color: rgba($text, 0.75);
+  }
+}

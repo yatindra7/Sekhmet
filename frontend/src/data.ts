@@ -1,4 +1,4 @@
-import { AppointmentType, Medication, NurseType, PatientType, PhysicianType } from './types';
+import { AppointmentType, ProcedureType, Medication, NurseType, PatientType, PhysicianType } from './types';
 
 export const Patients: PatientType[] = [
   {
@@ -101,5 +101,24 @@ export const Appointments: AppointmentType[] = [
     examinationRoom: 'C',
     medication: Medications[1],
     dose: '10 per week',
+  },
+];
+
+export const Procedures: ProcedureType[] = [
+  {
+    procedureID: 1,
+    name: 'Bypass Surgery',
+    patient: Patients[0],
+    prepNurse: Nurses[0],
+    physician: Physicians[0],
+    cost: 5000,
+  },
+  {
+    procedureID: 2,
+    name: 'Follicular Demiectomy',
+    patient: Patients[1],
+    prepNurse: Nurses[1],
+    physician: Physicians[1],
+    cost: 10000,
   },
 ];

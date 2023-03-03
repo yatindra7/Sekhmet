@@ -51,3 +51,12 @@ export interface AppointmentType {
   medication: Medication;
   dose: string;
 }
+
+export interface ProcedureType {
+  procedureID: number;
+  name: string;
+  patient: PatientType;
+  prepNurse: NurseType | null;
+  physician: PhysicianType;
+  cost: number;
+}

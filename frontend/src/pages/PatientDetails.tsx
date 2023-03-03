@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import { PatientType } from '../types';
 import { AiFillHome } from 'react-icons/ai';
 import { RiStethoscopeFill } from 'react-icons/ri';
-import { Appointments, Patients } from '../data';
+import { Appointments, Procedures, Patients } from '../data';
 import Appointment from '../components/Appointment';
+import Procedure from '../components/Procedure';
 
 function PatientDetails() {
   const params = useParams();
@@ -52,6 +53,11 @@ function PatientDetails() {
         </div>
         <div className="tests">
           <div className="title">Procedures and tests</div>
+          <div className="list">
+            {Procedures.map((procedure) => (
+              <Procedure key={procedure.procedureID} data={procedure} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="panel appointment">
