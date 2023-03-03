@@ -40,7 +40,8 @@
     }
   }
 
-  .add-btn {
+  .add-btn,
+  .more-details-btn {
     width: 6rem;
     margin-left: 1rem;
     outline: none;
@@ -52,6 +53,10 @@
     background-color: rgba($primary, 0.2);
     color: rgba($primary-dark, 1);
     cursor: pointer;
+  }
+
+  .more-details-btn {
+    margin: 0;
   }
 }
 

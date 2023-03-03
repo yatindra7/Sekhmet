@@ -38,6 +38,7 @@ function Patient() {
       {
         Header: 'SSN',
         accessor: 'ssn',
+        id: 'ssn',
       },
       {
         Header: 'Name',
@@ -54,6 +55,16 @@ function Patient() {
       {
         Header: 'Primary Physician',
         accessor: 'primaryCarePhysician',
+      },
+      {
+        Header: 'Action',
+        accessor: 'ssn',
+        id: 'action',
+        Cell: (data) => (
+          <button className="more-details-btn" onClick={() => navigate(`/patient/${data.row.original.ssn}`)}>
+            More
+          </button>
+        ),
       },
     ],
     [],

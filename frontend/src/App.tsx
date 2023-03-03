@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import { AuthProvider } from './hooks/useAuthContext';
 import Login from './pages/Login';
 import AddPatient from './pages/AddPatient';
+import PatientDetails from './pages/PatientDetails';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/patient">
                 <Route index element={<Patient />} />
                 <Route path="new" element={<AddPatient />} />
+                <Route path=":ssn" element={<PatientDetails />} />
               </Route>
               <Route path="/admin" element={<Admin />} />
             </Route>
