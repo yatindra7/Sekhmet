@@ -3,25 +3,8 @@ import { useParams } from 'react-router-dom';
 import { PatientType } from '../types';
 import { AiFillHome } from 'react-icons/ai';
 import { RiStethoscopeFill } from 'react-icons/ri';
-
-const data: PatientType[] = [
-  {
-    ssn: 100000001,
-    name: 'John Smith',
-    address: '42 Foobar Lane',
-    phone: '555-0256',
-    insuranceID: 68476213,
-    primaryCarePhysician: 'John Dorian',
-  },
-  {
-    ssn: 100000002,
-    name: 'Grace Ritchie',
-    address: '37 Snafu Drive',
-    phone: '555-0512',
-    insuranceID: 36546321,
-    primaryCarePhysician: 'Elliot Reid',
-  },
-];
+import { Appointments, Patients } from '../data';
+import Appointment from '../components/Appointment';
 
 function PatientDetails() {
   const params = useParams();
@@ -29,7 +12,7 @@ function PatientDetails() {
   const [patientData, setPatientData] = useState<PatientType>();
 
   useEffect(() => {
-    data.forEach((patient) => {
+    Patients.forEach((patient) => {
       if (params.ssn && patient.ssn === parseInt(params.ssn)) setPatientData(patient);
     });
   }, [params]);
@@ -73,6 +56,11 @@ function PatientDetails() {
       </div>
       <div className="panel appointment">
         <div className="title">Appointments</div>
+        <div className="list">
+          {Appointments.map((appointment) => (
+            <Appointment key={appointment.appointmentID} data={appointment} />
+          ))}
+        </div>
       </div>
     </div>
   );

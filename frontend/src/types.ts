@@ -17,3 +17,37 @@ export interface PatientType {
   insuranceID: number;
   primaryCarePhysician: string;
 }
+
+export interface PhysicianType {
+  employeeID: number;
+  name: string;
+  position: string;
+  ssn: number;
+}
+
+export interface NurseType {
+  employeeID: number;
+  name: string;
+  position: string;
+  registered: boolean;
+  ssn: number;
+}
+
+export interface Medication {
+  code: number;
+  name: string;
+  brand: string;
+  description: string;
+}
+
+export interface AppointmentType {
+  appointmentID: number;
+  patient: PatientType;
+  prepNurse: NurseType | null;
+  physician: PhysicianType;
+  start: Date;
+  end: Date;
+  examinationRoom: string;
+  medication: Medication;
+  dose: string;
+}
