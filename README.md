@@ -14,7 +14,7 @@
     - POST: login an existing user
 
 - `/patient`:
-    - GET: get all patients in db
+    - GET: get all patients in db (with pcp name by joining with physician)
     - POST: add new patient
 
 - `/patient/:ssn`
