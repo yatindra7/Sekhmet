@@ -1,11 +1,5 @@
 import axios from 'axios';
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../types';
 
@@ -22,9 +16,7 @@ export const useAuthContext = () => useContext(AuthContext);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem('authorizationtoken') !== null
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('authorizationtoken') !== null);
   const [user, setUser] = useState<User>();
 
   const loginHandler = (authToken: string) => {
@@ -34,9 +26,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser({
       id: 1,
       name: 'Sarita Singhania',
-      role: 'Doctor'
-    })
-    navigate("/")
+      role: 'Doctor',
+      email: 'hello@gmail.com',
+    });
+    navigate('/');
   };
 
   const logoutHandler = () => {
@@ -44,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     delete axios.defaults.headers.common.authorizationtoken;
     setUser(undefined);
     setIsAuthenticated(false);
-    navigate("/login")
+    navigate('/login');
   };
 
   useEffect(() => {
@@ -54,18 +47,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({
         id: 1,
         name: 'Sarita Singhania',
-        role: 'Doctor'
-      })
-    }
-    else {
-      navigate("/login")
+        role: 'Doctor',
+        email: 'hello@gmail.com',
+      });
+    } else {
+      navigate('/login');
     }
   }, [navigate]);
 
-  const value = useMemo(
-    () => ({ isAuthenticated, user, loginHandler, logoutHandler }),
-    [isAuthenticated, user]
-  );
+  const value = useMemo(() => ({ isAuthenticated, user, loginHandler, logoutHandler }), [isAuthenticated, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

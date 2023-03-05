@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key */
 import { Column, useTable } from 'react-table';
-import { PatientType } from '../types';
+import { PatientType, User } from '../types';
 
-function Table({ columns, data }: { columns: Column<PatientType>[]; data: PatientType[] }) {
+function Table({ columns, data }: { columns: Column<any>[]; data: PatientType[] | User[] }) {
   const tableInstance = useTable({ columns, data });
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;

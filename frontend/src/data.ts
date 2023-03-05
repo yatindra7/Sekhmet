@@ -1,4 +1,19 @@
-import { AppointmentType, ProcedureType, Medication, NurseType, PatientType, PhysicianType } from './types';
+import { AppointmentType, ProcedureType, Medication, NurseType, PatientType, PhysicianType, User } from './types';
+
+export const Users: User[] = [
+  {
+    id: 1,
+    name: 'Sarita Singhania',
+    role: 'Doctor',
+    email: 'hello@gmail.com',
+  },
+  {
+    id: 2,
+    name: 'Yatindra Ardnitay',
+    role: 'Doctor',
+    email: 'olleh@gmail.com',
+  },
+];
 
 export const Patients: PatientType[] = [
   {

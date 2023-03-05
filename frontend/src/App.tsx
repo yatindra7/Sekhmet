@@ -8,6 +8,7 @@ import { AuthProvider } from './hooks/useAuthContext';
 import Login from './pages/Login';
 import AddPatient from './pages/AddPatient';
 import PatientDetails from './pages/PatientDetails';
+import AddUser from './pages/AddUser';
 
 function App() {
   return (
@@ -24,7 +25,10 @@ function App() {
                 <Route path="new" element={<AddPatient />} />
                 <Route path=":ssn" element={<PatientDetails />} />
               </Route>
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin">
+                <Route index element={<Admin />} />
+                <Route path="new" element={<AddUser />} />
+              </Route>
             </Route>
           </Routes>
         </AuthProvider>
