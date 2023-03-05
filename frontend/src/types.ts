@@ -59,4 +59,5 @@ export interface ProcedureType {
   prepNurse: NurseType | null;
   physician: PhysicianType;
   cost: number;
+  date: Date;
 }

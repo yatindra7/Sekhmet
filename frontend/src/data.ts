@@ -112,6 +112,7 @@ export const Procedures: ProcedureType[] = [
     prepNurse: Nurses[0],
     physician: Physicians[0],
     cost: 5000,
+    date: new Date(),
   },
   {
     procedureID: 2,
@@ -120,5 +121,6 @@ export const Procedures: ProcedureType[] = [
     prepNurse: Nurses[1],
     physician: Physicians[1],
     cost: 10000,
+    date: new Date(),
   },
 ];

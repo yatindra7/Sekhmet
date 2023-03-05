@@ -3,10 +3,16 @@ import { RiHotelBedFill, RiStethoscopeFill } from 'react-icons/ri';
 import { TbNurse } from 'react-icons/tb';
 import { GiMedicines } from 'react-icons/gi';
 import { MdAttachMoney } from 'react-icons/md';
+import { BsCalendarDateFill } from 'react-icons/bs';
+import { getDateTimeStringFromISOString } from '../helpers';
 
 function Procedure(props: { data: ProcedureType }) {
   return (
     <div className="procedure-details">
+      <div className="info date">
+        <BsCalendarDateFill size={25} />
+        {getDateTimeStringFromISOString(props.data.date.toISOString())}
+      </div>
       <div className="info meds">
         <GiMedicines size={25} />
         {props.data.name}
