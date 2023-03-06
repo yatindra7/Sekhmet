@@ -4,11 +4,47 @@
 
   .panel {
     width: 50%;
+    min-height: calc(100vh - 9rem);
     margin: 1rem 0;
     padding: 0 1.5rem;
 
     &:not(:last-child) {
       border-right: 2px solid rgba($grey, 0.8);
     }
+  }
+
+  .title {
+    text-align: center;
+    margin: 2rem 0 1rem 0;
+    font-size: 1.2rem;
+  }
+
+  .slot-btn {
+    display: inline-block;
+    margin: 1rem;
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+
+    background-color: rgba($primary, 0.2);
+    color: rgba($primary-dark, 1);
+
+    &:disabled {
+      background-color: rgba($primary, 0.1);
+      color: rgba($primary-dark, 0.5);
+      box-shadow: none;
+    }
+
+    &[data-active='true'] {
+      background-color: rgba($secondary-light, 0.5);
+      color: rgba($secondary, 1);
+      font-weight: 600;
+    }
+  }
+
+  .error {
+    color: rgba(#ff0032, 0.8);
   }
 }

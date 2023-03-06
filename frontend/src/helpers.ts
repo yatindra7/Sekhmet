@@ -62,3 +62,10 @@ export const getDateStringFromISOString = (date: string | undefined) => {
 
   return dateString;
 };
+
+export const getDateString = (dateTime: Date | undefined) => {
+  const dateTimeLocalString =
+    dateTime === undefined ? new Date() : new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000);
+
+  return dateTimeLocalString.toISOString().split('T')[0];
+};

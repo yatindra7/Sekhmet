@@ -42,13 +42,13 @@ export const Physicians: PhysicianType[] = [
     ssn: 111111111,
   },
   {
-    employeeID: 1,
+    employeeID: 2,
     name: 'Elliot Reid',
     position: 'Attending Physician',
     ssn: 111111111,
   },
   {
-    employeeID: 1,
+    employeeID: 3,
     name: 'Christopher Turk',
     position: 'Surgical Attending Physician',
     ssn: 111111111,
