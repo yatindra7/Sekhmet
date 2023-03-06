@@ -1,0 +1,14 @@
+.scheduler {
+  display: flex;
+  align-items: stretch;
+
+  .panel {
+    width: 50%;
+    margin: 1rem 0;
+    padding: 0 1.5rem;
+
+    &:not(:last-child) {
+      border-right: 2px solid rgba($grey, 0.8);
+    }
+  }
+}

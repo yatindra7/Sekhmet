@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PatientType } from '../types';
 import { AiFillHome } from 'react-icons/ai';
 import { RiStethoscopeFill } from 'react-icons/ri';
@@ -9,6 +9,7 @@ import Procedure from '../components/Procedure';
 
 function PatientDetails() {
   const params = useParams();
+  const navigate = useNavigate();
 
   const [patientData, setPatientData] = useState<PatientType>();
 
@@ -52,7 +53,12 @@ function PatientDetails() {
           </div>
         </div>
         <div className="tests">
-          <div className="title">Procedures and tests</div>
+          <div className="top-bar">
+            <div className="title">Procedures and tests</div>
+            <button type="button" className="add-btn" onClick={() => navigate('schedule/test')}>
+              Add +
+            </button>
+          </div>
           <div className="list">
             {Procedures.map((procedure) => (
               <Procedure key={procedure.procedureID} data={procedure} />
@@ -61,7 +67,12 @@ function PatientDetails() {
         </div>
       </div>
       <div className="panel appointment">
-        <div className="title">Appointments</div>
+        <div className="top-bar">
+          <div className="title">Appointments</div>
+          <button type="button" className="add-btn" onClick={() => navigate('schedule/appointment')}>
+            Add +
+          </button>
+        </div>
         <div className="list">
           {Appointments.map((appointment) => (
             <Appointment key={appointment.appointmentID} data={appointment} />

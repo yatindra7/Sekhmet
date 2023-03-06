@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import AddPatient from './pages/AddPatient';
 import PatientDetails from './pages/PatientDetails';
 import AddUser from './pages/AddUser';
+import Scheduler from './pages/Scheduler';
 
 function App() {
   return (
@@ -23,7 +24,10 @@ function App() {
               <Route path="/patient">
                 <Route index element={<Patient />} />
                 <Route path="new" element={<AddPatient />} />
-                <Route path=":ssn" element={<PatientDetails />} />
+                <Route path=":ssn">
+                  <Route index element={<PatientDetails />} />
+                  <Route path="schedule/:type" element={<Scheduler />} />
+                </Route>
               </Route>
               <Route path="/admin">
                 <Route index element={<Admin />} />

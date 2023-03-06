@@ -62,3 +62,10 @@ export interface ProcedureType {
   cost: number;
   date: Date;
 }
+
+export type SchedulerFormType = {
+  patient: number;
+  physician: number;
+  datetime: Date;
+  procedure: number;
+};
