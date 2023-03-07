@@ -2,8 +2,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+import sys
+
+if len(sys.argv) != 2:
+    print("Usage: db.py <db_name>.db")
+
+# give as first argument
+dbname = sys.argv[1]
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sekhmet.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{dbname}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -166,6 +174,8 @@ class Undergoes(db.Model):
 
 with app.app_context():
     db.create_all()
+
+    print("DB_CREATE_ALL")
 
     physicians_data = [
         Physician(EmployeeID=1, Name='John Dorian', Position ='Staff Internist', SSN=111111111),
@@ -376,15 +386,17 @@ with app.app_context():
     db.session.add_all(undergoes_data)
     db.session.add_all(trained_in_data)
 
-    # physicians = session.query(Physician).all()
-    dep = Trained_In.query.filter(Trained_In.Treatment == 4).all()
+    db.session.commit()
+
+    # physicians = Physician.query.all()
+    # dep = Trained_In.query.filter_by(Treatment = 4).all()
 
     # print the results
-    for physician in dep:
-        print(physician)
+    # for physician in dep:
+    #    print(physician)
     # physicians = session.query(Physician).all()
-    surgeons = Trained_In.query.all()
+    # surgeons = Trained_In.query.all()
 
     # print the results
-    for physician in surgeons:
-        print(physician)
+    # for physician in surgeons:
+    #    print(physician)
