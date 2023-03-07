@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
+import toast from 'react-hot-toast';
+
 export const debounce = (callback: Function, wait = 300) => {
   let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -68,4 +70,13 @@ export const getDateString = (dateTime: Date | undefined) => {
     dateTime === undefined ? new Date() : new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000);
 
   return dateTimeLocalString.toISOString().split('T')[0];
+};
+
+export const handleAxiosError = (error: any) => {
+  console.log(error); // eslint-disable-line no-console
+  if (error?.response?.data) {
+    toast.error(error.response.data.message);
+  } else {
+    toast.error('Server error. Please try again.');
+  }
 };

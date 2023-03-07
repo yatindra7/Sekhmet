@@ -11,56 +11,57 @@ export interface LoginForm {
 }
 
 export interface PatientType {
-  ssn: number;
-  name: string;
-  address: string;
-  phone: string;
-  insuranceID: number;
-  primaryCarePhysician: string;
+  SSN: number;
+  Name: string;
+  Address: string;
+  Phone: string;
+  InsuranceID: number;
+  PCP: string;
+  Gender: 'Male' | 'Female';
+  Age: number;
 }
 
 export interface PhysicianType {
-  employeeID: number;
-  name: string;
-  position: string;
-  ssn: number;
+  EmployeeID: number;
+  Name: string;
+  Position: string;
+  SSN: number;
 }
 
 export interface NurseType {
-  employeeID: number;
-  name: string;
-  position: string;
-  registered: boolean;
-  ssn: number;
+  EmployeeID: number;
+  Name: string;
+  Position: string;
+  Registered: boolean;
+  SSN: number;
 }
 
 export interface Medication {
-  code: number;
-  name: string;
-  brand: string;
-  description: string;
+  Code: number;
+  Name: string;
+  Brand: string;
+  Description: string;
 }
 
 export interface AppointmentType {
-  appointmentID: number;
-  patient: PatientType;
-  prepNurse: NurseType | null;
-  physician: PhysicianType;
-  start: Date;
-  end: Date;
-  examinationRoom: string;
-  medication: Medication;
-  dose: string;
+  AppointmentID: number;
+  Patient: PatientType;
+  PrepNurse: NurseType;
+  Physician: PhysicianType;
+  Start: string;
+  ExaminationRoom: string;
+  Medication: Medication;
+  Dose: string;
 }
 
 export interface ProcedureType {
-  procedureID: number;
-  name: string;
-  patient: PatientType;
-  prepNurse: NurseType | null;
-  physician: PhysicianType;
-  cost: number;
-  date: Date;
+  Procedure: number;
+  Name: string;
+  Patient: PatientType;
+  AssistingNurse: NurseType | null;
+  Physician: PhysicianType;
+  Cost?: number;
+  Date: string;
 }
 
 export type SchedulerFormType = {

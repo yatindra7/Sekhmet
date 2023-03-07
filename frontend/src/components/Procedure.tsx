@@ -11,31 +11,31 @@ function Procedure(props: { data: ProcedureType }) {
     <div className="procedure-details">
       <div className="info date">
         <BsCalendarDateFill size={25} />
-        {getDateTimeStringFromISOString(props.data.date.toISOString())}
+        {getDateTimeStringFromISOString(props.data.Date)}
       </div>
       <div className="info meds">
         <GiMedicines size={25} />
-        {props.data.name}
+        {props.data.Name}
       </div>
       <div className="row">
         <div className="info pat">
           <RiHotelBedFill size={25} />
-          {props.data.patient.name}
+          {props.data.Patient.Name}
         </div>
         <div className="info cost">
           <MdAttachMoney size={25} />
-          {props.data.cost}
+          {props.data.Cost}
         </div>
       </div>
       <div className="row">
         <div className="info doc">
           <RiStethoscopeFill size={25} />
-          {props.data.physician.name} ({props.data.physician.position})
+          {props.data.Physician.Name}
         </div>
-        {props.data.prepNurse && (
+        {props.data.AssistingNurse && (
           <div className="info doc">
             <TbNurse size={25} />
-            {props.data.prepNurse.name} ({props.data.prepNurse.position})
+            {props.data.AssistingNurse.Name}
           </div>
         )}
       </div>

@@ -10,33 +10,32 @@ function Appointment(props: { data: AppointmentType }) {
     <div className="appointment-details">
       <div className="info date">
         <BsCalendarDateFill size={25} />
-        {getDateTimeStringFromISOString(props.data.start.toISOString())} -{' '}
-        {getDateTimeStringFromISOString(props.data.end.toISOString())}
+        {getDateTimeStringFromISOString(props.data.Start)}
       </div>
       <div className="info pat">
         <RiHotelBedFill size={25} />
-        {props.data.patient.name}
+        {props.data.Patient.Name}
       </div>
       <div className="row">
         <div className="info doc">
           <RiStethoscopeFill size={25} />
-          {props.data.physician.name} ({props.data.physician.position})
+          {props.data.Physician.Name} ({props.data.Physician.Position})
         </div>
-        {props.data.prepNurse && (
+        {props.data.PrepNurse && (
           <div className="info doc">
             <TbNurse size={25} />
-            {props.data.prepNurse.name} ({props.data.prepNurse.position})
+            {props.data.PrepNurse.Name} ({props.data.PrepNurse.Position})
           </div>
         )}
       </div>
       <div className="row">
         <div className="info meds">
           <GiMedicines size={25} />
-          {props.data.medication.name} ({props.data.dose})
+          {props.data.Medication.Name} ({props.data.Dose})
         </div>
         <div className="info room">
           <GiDoor size={25} />
-          {props.data.examinationRoom}
+          {props.data.ExaminationRoom}
         </div>
       </div>
     </div>

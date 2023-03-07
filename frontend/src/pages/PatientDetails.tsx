@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { PatientType } from '../types';
+import { AppointmentType, PatientType, ProcedureType } from '../types';
 import { AiFillHome } from 'react-icons/ai';
 import { RiStethoscopeFill } from 'react-icons/ri';
-import { Appointments, Procedures, Patients } from '../data';
+import { Appointments, Procedures, BACKEND_URL } from '../data';
 import Appointment from '../components/Appointment';
 import Procedure from '../components/Procedure';
+import axios from 'axios';
 
 function PatientDetails() {
   const params = useParams();
   const navigate = useNavigate();
 
   const [patientData, setPatientData] = useState<PatientType>();
+  const [appointmentData, setAppointmentData] = useState<AppointmentType[]>([]);
+  const [procedureData, setProcedureData] = useState<ProcedureType[]>([]);
 
   useEffect(() => {
-    Patients.forEach((patient) => {
-      if (params.ssn && patient.ssn === parseInt(params.ssn)) setPatientData(patient);
+    axios.get(`${BACKEND_URL}/patient/${params.ssn}`).then((response) => {
+      setPatientData(response.data.patient);
+      setAppointmentData(response.data.appointments);
+      setProcedureData(response.data.undergoes);
     });
   }, [params]);
 
@@ -25,30 +30,35 @@ function PatientDetails() {
     <div className="patient-details">
       <div className="panel">
         <div className="top">
-          <img src={`https://randomuser.me/api/portraits/men/${patientData.ssn % 100}.jpg`} alt={patientData.name} />
+          <img
+            src={`https://randomuser.me/api/portraits/${patientData.Gender === 'Male' ? 'men' : 'women'}/${
+              patientData.SSN % 100
+            }.jpg`}
+            alt={patientData.Name}
+          />
           <div className="meta">
-            <div className="name">{patientData.name}</div>
+            <div className="name">{patientData.Name}</div>
             <div className="secondary">Male, 24 years old</div>
             <div className="doc">
               <RiStethoscopeFill size={25} />
-              {patientData.primaryCarePhysician}
+              {patientData.PCP}
             </div>
             <div className="address">
-              <AiFillHome size={25} /> {patientData.address}
+              <AiFillHome size={25} /> {patientData.Address}
             </div>
           </div>
           <div className="contacts">
             <div>
               <strong>Phone: </strong>
-              {patientData.phone}
+              {patientData.Phone}
             </div>
             <div>
               <strong>SSN: </strong>
-              {patientData.ssn}
+              {patientData.SSN}
             </div>
             <div>
               <strong>Insurance: </strong>
-              {patientData.insuranceID}
+              {patientData.InsuranceID}
             </div>
           </div>
         </div>
@@ -61,7 +71,7 @@ function PatientDetails() {
           </div>
           <div className="list">
             {Procedures.map((procedure) => (
-              <Procedure key={procedure.procedureID} data={procedure} />
+              <Procedure key={procedure.Procedure} data={procedure} />
             ))}
           </div>
         </div>
@@ -75,7 +85,7 @@ function PatientDetails() {
         </div>
         <div className="list">
           {Appointments.map((appointment) => (
-            <Appointment key={appointment.appointmentID} data={appointment} />
+            <Appointment key={appointment.AppointmentID} data={appointment} />
           ))}
         </div>
       </div>

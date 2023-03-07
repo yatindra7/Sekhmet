@@ -8,6 +8,7 @@ flask = "*"
 flask-bcrypt = "*"
 flask-login = "*"
 flask-sqlalchemy = "*"
+flask-cors = "*"
 
 [dev-packages]
 

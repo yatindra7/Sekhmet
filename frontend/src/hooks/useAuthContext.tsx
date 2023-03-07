@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginHandler = (authToken: string) => {
     localStorage.setItem('authorizationtoken', authToken);
-    axios.defaults.headers.common.authorizationtoken = authToken;
+    // axios.defaults.headers.common.authorizationtoken = authToken;
     setIsAuthenticated(true);
     setUser({
       id: 1,
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const authToken = localStorage.getItem('authorizationtoken');
     if (authToken !== null) {
-      axios.defaults.headers.common.authorizationtoken = authToken;
+      // axios.defaults.headers.common.authorizationtoken = authToken;
       setUser({
         id: 1,
         name: 'Sarita Singhania',

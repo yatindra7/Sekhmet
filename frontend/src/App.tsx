@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import Admin from './pages/Admin';
 import Patient from './pages/Patient';
@@ -14,6 +15,7 @@ import Scheduler from './pages/Scheduler';
 function App() {
   return (
     <div className="App">
+      <Toaster />
       <BrowserRouter>
         <AuthProvider>
           <Routes>

@@ -5,6 +5,9 @@ import Table from '../components/Table';
 import { PatientType } from '../types';
 import fuzzysort from 'fuzzysort';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '../data';
+import { handleAxiosError } from '../helpers';
 
 function Patient() {
   const navigate = useNavigate();
@@ -13,55 +16,41 @@ function Patient() {
   const [patients, setPatients] = useState<PatientType[]>([]);
 
   useEffect(() => {
-    setPatients([
-      {
-        ssn: 100000001,
-        name: 'John Smith',
-        address: '42 Foobar Lane',
-        phone: '555-0256',
-        insuranceID: 68476213,
-        primaryCarePhysician: 'John Dorian',
-      },
-      {
-        ssn: 100000002,
-        name: 'Grace Ritchie',
-        address: '37 Snafu Drive',
-        phone: '555-0512',
-        insuranceID: 36546321,
-        primaryCarePhysician: 'Elliot Reid',
-      },
-    ]);
+    axios
+      .get(`${BACKEND_URL}/patient`)
+      .then((response) => setPatients(response.data.patients))
+      .catch((error) => handleAxiosError(error));
   }, []);
 
   const columns = useMemo<Column<PatientType>[]>(
     () => [
       {
         Header: 'SSN',
-        accessor: 'ssn',
+        accessor: 'SSN',
         id: 'ssn',
       },
       {
         Header: 'Name',
-        accessor: 'name',
+        accessor: 'Name',
       },
       {
         Header: 'Address',
-        accessor: 'address',
+        accessor: 'Address',
       },
       {
         Header: 'Phone',
-        accessor: 'phone',
+        accessor: 'Phone',
       },
       {
         Header: 'Primary Physician',
-        accessor: 'primaryCarePhysician',
+        accessor: 'PCP',
       },
       {
         Header: 'Action',
-        accessor: 'ssn',
+        accessor: 'SSN',
         id: 'action',
         Cell: (data) => (
-          <button className="more-details-btn" onClick={() => navigate(`/patient/${data.row.original.ssn}`)}>
+          <button className="more-details-btn" onClick={() => navigate(`/patient/${data.row.original.SSN}`)}>
             More
           </button>
         ),
@@ -71,7 +60,7 @@ function Patient() {
   );
 
   const data: PatientType[] = useMemo(
-    () => fuzzysort.go(query, patients, { key: 'name', all: true }).map((result) => result.obj),
+    () => fuzzysort.go(query, patients, { key: 'Name', all: true }).map((result) => result.obj),
     [patients, query],
   );
 

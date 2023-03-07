@@ -1,5 +1,7 @@
 import { AppointmentType, ProcedureType, Medication, NurseType, PatientType, PhysicianType, User } from './types';
 
+export const BACKEND_URL = 'http://localhost:5000';
+
 export const Users: User[] = [
   {
     id: 1,
@@ -15,24 +17,7 @@ export const Users: User[] = [
   },
 ];
 
-export const Patients: PatientType[] = [
-  {
-    ssn: 100000001,
-    name: 'John Smith',
-    address: '42 Foobar Lane',
-    phone: '555-0256',
-    insuranceID: 68476213,
-    primaryCarePhysician: 'John Dorian',
-  },
-  {
-    ssn: 100000002,
-    name: 'Grace Ritchie',
-    address: '37 Snafu Drive',
-    phone: '555-0512',
-    insuranceID: 36546321,
-    primaryCarePhysician: 'Elliot Reid',
-  },
-];
+export const Patients: PatientType[] = [];
 
 export const Physicians: PhysicianType[] = [
   {
@@ -94,48 +79,6 @@ export const Medications: Medication[] = [
   },
 ];
 
-export const Appointments: AppointmentType[] = [
-  {
-    appointmentID: 13216584,
-    patient: Patients[0],
-    prepNurse: Nurses[0],
-    physician: Physicians[0],
-    start: new Date(),
-    end: new Date(),
-    examinationRoom: 'A',
-    medication: Medications[0],
-    dose: '5 per day',
-  },
-  {
-    appointmentID: 26548913,
-    patient: Patients[1],
-    prepNurse: Nurses[1],
-    physician: Physicians[1],
-    start: new Date(),
-    end: new Date(),
-    examinationRoom: 'C',
-    medication: Medications[1],
-    dose: '10 per week',
-  },
-];
+export const Appointments: AppointmentType[] = [];
 
-export const Procedures: ProcedureType[] = [
-  {
-    procedureID: 1,
-    name: 'Bypass Surgery',
-    patient: Patients[0],
-    prepNurse: Nurses[0],
-    physician: Physicians[0],
-    cost: 5000,
-    date: new Date(),
-  },
-  {
-    procedureID: 2,
-    name: 'Follicular Demiectomy',
-    patient: Patients[1],
-    prepNurse: Nurses[1],
-    physician: Physicians[1],
-    cost: 10000,
-    date: new Date(),
-  },
-];
+export const Procedures: ProcedureType[] = [];
