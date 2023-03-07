@@ -3,11 +3,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
+import sys
+
+if len(sys.argv) != 2:
+    print("Usage: app.py <db_name>.db")
+
+# give as first argument
+dbname = sys.argv[1]
+
 app = Flask(__name__)
 
 # configs (to be changed)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sekhmet.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{dbname}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
