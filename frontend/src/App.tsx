@@ -11,6 +11,12 @@ import AddPatient from './pages/AddPatient';
 import PatientDetails from './pages/PatientDetails';
 import AddUser from './pages/AddUser';
 import Scheduler from './pages/Scheduler';
+import axios from 'axios';
+
+const authToken = localStorage.getItem('authorizationtoken');
+if (authToken !== null) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+}
 
 function App() {
   return (
