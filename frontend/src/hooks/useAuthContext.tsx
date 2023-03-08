@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from '../data';
+import { handleAxiosError } from '../helpers';
 import { User } from '../types';
 
 type AuthContextType = {
@@ -23,12 +25,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('authorizationtoken', authToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
     setIsAuthenticated(true);
-    setUser({
-      id: 1,
-      name: 'Sarita Singhania',
-      role: 'Doctor',
-      email: 'hello@gmail.com',
-    });
+    axios
+      .get(`${BACKEND_URL}/token_user`)
+      .then((response) => setUser(response.data))
+      .catch((error) => handleAxiosError(error));
     navigate('/');
   };
 
@@ -44,12 +44,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const authToken = localStorage.getItem('authorizationtoken');
     if (authToken !== null) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-      setUser({
-        id: 1,
-        name: 'Sarita Singhania',
-        role: 'Doctor',
-        email: 'hello@gmail.com',
-      });
+      axios
+        .get(`${BACKEND_URL}/token_user`)
+        .then((response) => setUser(response.data))
+        .catch((error) => {
+          handleAxiosError(error);
+          navigate('/login');
+        });
     } else {
       navigate('/login');
     }
