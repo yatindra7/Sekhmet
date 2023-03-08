@@ -16,7 +16,7 @@ export interface PatientType {
   Address: string;
   Phone: string;
   InsuranceID: number;
-  PCP: string;
+  PCP: PhysicianType;
   Gender: 'Male' | 'Female';
   Age: number;
 }
@@ -45,8 +45,8 @@ export interface Medication {
 
 export interface AppointmentType {
   AppointmentID: number;
-  Patient: PatientType;
-  PrepNurse: NurseType;
+  Patient: string;
+  PrepNurse: string;
   Physician: PhysicianType;
   Start: string;
   ExaminationRoom: string;
@@ -55,13 +55,20 @@ export interface AppointmentType {
 }
 
 export interface ProcedureType {
-  Procedure: number;
   Name: string;
-  Patient: PatientType;
-  AssistingNurse: NurseType | null;
+  Code: string;
+  Cost: string;
+}
+
+export interface UndergoesType {
+  Procedure: ProcedureType;
+  Patient: string;
+  AssistingNurse: string | null;
   Physician: PhysicianType;
-  Cost?: number;
   Date: string;
+  Result: string;
+  Stay: string;
+  Artifact: string;
 }
 
 export type SchedulerFormType = {

@@ -14,7 +14,7 @@ function Appointment(props: { data: AppointmentType }) {
       </div>
       <div className="info pat">
         <RiHotelBedFill size={25} />
-        {props.data.Patient.Name}
+        {props.data.Patient}
       </div>
       <div className="row">
         <div className="info doc">
@@ -24,7 +24,7 @@ function Appointment(props: { data: AppointmentType }) {
         {props.data.PrepNurse && (
           <div className="info doc">
             <TbNurse size={25} />
-            {props.data.PrepNurse.Name} ({props.data.PrepNurse.Position})
+            {props.data.PrepNurse}
           </div>
         )}
       </div>

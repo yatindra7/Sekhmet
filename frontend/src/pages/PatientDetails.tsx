@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppointmentType, PatientType, ProcedureType } from '../types';
+import { AppointmentType, PatientType, ProcedureType, UndergoesType } from '../types';
 import { AiFillHome } from 'react-icons/ai';
 import { RiStethoscopeFill } from 'react-icons/ri';
 import { Appointments, Procedures, BACKEND_URL } from '../data';
@@ -14,13 +14,29 @@ function PatientDetails() {
 
   const [patientData, setPatientData] = useState<PatientType>();
   const [appointmentData, setAppointmentData] = useState<AppointmentType[]>([]);
-  const [procedureData, setProcedureData] = useState<ProcedureType[]>([]);
+  const [procedureData, setProcedureData] = useState<UndergoesType[]>([]);
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/patient/${params.ssn}`).then((response) => {
-      setPatientData(response.data.patient);
-      setAppointmentData(response.data.appointments);
-      setProcedureData(response.data.undergoes);
+      const temp: PatientType = { ...response.data.patient[0] };
+      temp.PCP = { ...response.data.patient[1] };
+      setPatientData(temp);
+      setAppointmentData(
+        response.data.appointments.map((data: any) => {
+          const temp: AppointmentType = { ...data[0] };
+          temp.Physician = { ...data[1] };
+          temp.Medication = { ...data[2] };
+          return temp;
+        }),
+      );
+      setProcedureData(
+        response.data.undergoes.map((data: any) => {
+          const temp: UndergoesType = { ...data[0] };
+          temp.Physician = { ...data[1] };
+          temp.Procedure = { ...data[2] };
+          return temp;
+        }),
+      );
     });
   }, [params]);
 
@@ -41,7 +57,7 @@ function PatientDetails() {
             <div className="secondary">Male, 24 years old</div>
             <div className="doc">
               <RiStethoscopeFill size={25} />
-              {patientData.PCP}
+              {patientData.PCP.Name}
             </div>
             <div className="address">
               <AiFillHome size={25} /> {patientData.Address}
@@ -70,8 +86,8 @@ function PatientDetails() {
             </button>
           </div>
           <div className="list">
-            {Procedures.map((procedure) => (
-              <Procedure key={procedure.Procedure} data={procedure} />
+            {procedureData.map((procedure) => (
+              <Procedure key={procedure.Date} data={procedure} />
             ))}
           </div>
         </div>
@@ -84,7 +100,7 @@ function PatientDetails() {
           </button>
         </div>
         <div className="list">
-          {Appointments.map((appointment) => (
+          {appointmentData.map((appointment) => (
             <Appointment key={appointment.AppointmentID} data={appointment} />
           ))}
         </div>
