@@ -152,14 +152,14 @@ def patient():
     if request.method == 'POST':
         
         # @Chirag the forms
-        ssn = request.form.get('ssn')
-        name = request.form.get('name')
-        address = request.form.get('address')
-        phone = request.form.get('phone')
-        insurance_id = request.form.get('insurance_id')
-        pcp = request.form.get('pcp')
-        gender = request.form.get('gender')
-        age = request.form.get('age')
+        ssn = request.form.get('SSN')
+        name = request.form.get('Name')
+        address = request.form.get('Address')
+        phone = request.form.get('Phone')
+        insurance_id = request.form.get('InsuranceID')
+        pcp = request.form.get('PCP')
+        gender = request.form.get('Gender')
+        age = request.form.get('Age')
 
         patient = Patient(
 
