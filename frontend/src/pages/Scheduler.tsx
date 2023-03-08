@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from '../hooks/useForm';
-import { SchedulerFormType } from '../types';
+import { PhysicianType, ProcedureType, SchedulerFormType } from '../types';
 import { AiOutlineLoading } from 'react-icons/ai';
 import Select from 'react-select';
-import { Physicians, Procedures } from '../data';
+import { BACKEND_URL, Physicians, Procedures } from '../data';
 import CalendarComponent from 'react-calendar';
-import { getDateString } from '../helpers';
+import { getDateString, handleAxiosError } from '../helpers';
+import axios from 'axios';
 
 type TimeSlot = {
   start: string;
@@ -23,6 +24,19 @@ function Scheduler() {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number>(-1);
+  const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
+  const [procedures, setProcedures] = useState<ProcedureType[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${BACKEND_URL}/procedure`)
+      .then((response) => setProcedures(response.data.procedures))
+      .catch((error) => handleAxiosError(error));
+    axios
+      .get(`${BACKEND_URL}/physician`)
+      .then((response) => setPhysicians(response.data.physicians))
+      .catch((error) => handleAxiosError(error));
+  }, []);
 
   useEffect(() => {
     if (params.type) setType(params.type);
@@ -93,8 +107,8 @@ function Scheduler() {
             <div className="form-item form-item-long required">
               <div className="label">Physician</div>
               <Select
-                options={Physicians.map((physician) => {
-                  return { value: physician.employeeID, label: physician.name };
+                options={physicians.map((physician) => {
+                  return { value: physician.EmployeeID, label: physician.Name };
                 })}
                 onChange={(selectedPhysician) => changeValue('physician')(selectedPhysician?.value)}
                 classNamePrefix="custom-select"
@@ -107,8 +121,8 @@ function Scheduler() {
               <div className="form-item form-item-long required">
                 <div className="label">Procedure/Test</div>
                 <Select
-                  options={Procedures.map((procedure) => {
-                    return { value: procedure.procedureID, label: procedure.name };
+                  options={procedures.map((procedure) => {
+                    return { value: procedure.Code, label: procedure.Name };
                   })}
                   onChange={(selectedProcedure) => changeValue('procedure')(selectedProcedure?.value)}
                   classNamePrefix="custom-select"

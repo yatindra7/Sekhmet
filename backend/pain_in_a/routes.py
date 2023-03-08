@@ -190,17 +190,22 @@ def patient_ssn(ssn):
         )
 
     # undergoes data
-    undergoes = db.session.query(Undergoes, Procedure
+    undergoes = db.session.query(Undergoes, Physician, Procedure
+                                 ).join(Physician, Undergoes.Physician == Physician.EmployeeID
+                                        ).filter(Undergoes.Patient == ssn
                                  ).join(Procedure, Undergoes.Procedure == Procedure.Code
                                         ).filter(Undergoes.Patient == ssn)
     if undergoes:
-        undergoes = [(sqlalchemy_row_to_dict(undergone[0]), sqlalchemy_row_to_dict(undergone[1])) for undergone in undergoes]
+        undergoes = [(sqlalchemy_row_to_dict(undergone[0]), sqlalchemy_row_to_dict(undergone[1]), sqlalchemy_row_to_dict(undergone[2])) for undergone in undergoes]
     # appointments
-    appointments =  db.session.query(Appointment, Physician
+    appointments =  db.session.query(Appointment, Physician, Medication, Prescribes
                                      ).join(Physician, Appointment.Physician == Physician.EmployeeID
-                                            ).filter(Appointment.Patient == ssn)
+                                            ).filter(Appointment.Patient == ssn
+                                     ).join(Medication, Medication.Code == Prescribes.Medication
+                                            ).filter(Appointment.Patient == ssn
+                                            ).filter(Appointment.AppointmentID == Prescribes.Appointment)
     if appointments:
-        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1])) for appointment in appointments]
+        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), sqlalchemy_row_to_dict(appointment[2])) for appointment in appointments]
 
     # appointment data
     return make_response(

@@ -18,7 +18,15 @@ function Patient() {
   useEffect(() => {
     axios
       .get(`${BACKEND_URL}/patient`)
-      .then((response) => setPatients(response.data.patients))
+      .then((response) =>
+        setPatients(
+          response.data.patients.map((data: any) => {
+            const temp: PatientType = { ...data[0] };
+            temp.PCP = { ...data[1] };
+            return temp;
+          }),
+        ),
+      )
       .catch((error) => handleAxiosError(error));
   }, []);
 
@@ -43,7 +51,7 @@ function Patient() {
       },
       {
         Header: 'Primary Physician',
-        accessor: 'PCP',
+        accessor: (data) => data.PCP.Name,
       },
       {
         Header: 'Action',
