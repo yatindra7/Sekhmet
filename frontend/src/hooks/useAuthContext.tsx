@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginHandler = (authToken: string) => {
     localStorage.setItem('authorizationtoken', authToken);
-    // axios.defaults.headers.common.authorizationtoken = authToken;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
     setIsAuthenticated(true);
     setUser({
       id: 1,
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logoutHandler = () => {
     localStorage.removeItem('authorizationtoken');
-    delete axios.defaults.headers.common.authorizationtoken;
+    delete axios.defaults.headers.common['Authorization'];
     setUser(undefined);
     setIsAuthenticated(false);
     navigate('/login');
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const authToken = localStorage.getItem('authorizationtoken');
     if (authToken !== null) {
-      // axios.defaults.headers.common.authorizationtoken = authToken;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
       setUser({
         id: 1,
         name: 'Sarita Singhania',

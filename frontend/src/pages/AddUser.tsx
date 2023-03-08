@@ -27,7 +27,10 @@ function AddUser() {
         setIsSubmitLoading(false);
         navigate('/admin');
       })
-      .catch((error) => handleAxiosError(error));
+      .catch((error) => {
+        handleAxiosError(error);
+        setIsSubmitLoading(false);
+      });
   };
 
   const { handleSubmit, handleChange, changeValue, data, errors } = useForm<UserForm>({
