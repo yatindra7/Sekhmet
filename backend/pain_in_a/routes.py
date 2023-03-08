@@ -1,7 +1,7 @@
 from app import app, db, bcrypt, jwt
 from models import User, Physician, Patient, Undergoes, Appointment, Procedure, Medication, Prescribes, Nurse, Stay
 from flask import request, make_response, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, current_user
 
 from boto3 import session
 from botocore.client import Config
@@ -120,6 +120,30 @@ def user_login():
                 }
             ), 403
         )
+
+@jwt.user_identity_loader
+def user_id(user):
+    return user.email
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+
+    identity = jwt_data['sub']
+    return User.query.filter_by(email = identity).one_or_none()
+
+@app.route('/token_user')
+@jwt_required()
+def token_user():
+
+    #_user = get_jwt_identity()
+    return jsonify(
+        {
+            "id": current_user.id
+            , "email": current_user.email
+            , "name": current_user.name
+            , "role": current_user.role
+        }
+    )
 
 @app.route('/patient', methods=['POST', 'GET'])
 @jwt_required()
