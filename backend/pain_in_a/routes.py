@@ -42,6 +42,7 @@ def user():
             , email = email
             , password = bcrypt.generate_password_hash(password)
             , role = role
+            , name=name
             )
         
         # inserting user into db

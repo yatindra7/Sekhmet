@@ -3,9 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
 import { User } from '../types';
-import { Users as UsersData } from '../data';
+import { BACKEND_URL, Users as UsersData } from '../data';
 import { BiSearch } from 'react-icons/bi';
 import Table from '../components/Table';
+import axios from 'axios';
+import { handleAxiosError } from '../helpers';
 
 function Admin() {
   const navigate = useNavigate();
@@ -14,7 +16,10 @@ function Admin() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    setUsers(UsersData);
+    axios
+      .get(`${BACKEND_URL}/user`)
+      .then((response) => setUsers(response.data.users))
+      .catch((error) => handleAxiosError(error));
   }, []);
 
   const columns = useMemo<Column<User>[]>(

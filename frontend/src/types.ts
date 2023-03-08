@@ -5,6 +5,12 @@ export interface User {
   email: string;
 }
 
+export interface UserForm extends User {
+  password: string;
+  position: string;
+  ssn: string;
+}
+
 export interface LoginForm {
   email: string;
   password: string;

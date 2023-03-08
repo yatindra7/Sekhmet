@@ -74,9 +74,15 @@ export const getDateString = (dateTime: Date | undefined) => {
 
 export const handleAxiosError = (error: any) => {
   console.log(error); // eslint-disable-line no-console
-  if (error?.response?.data) {
+  if (error?.response?.data?.message) {
     toast.error(error.response.data.message);
   } else {
     toast.error('Server error. Please try again.');
   }
 };
+
+export const getFormData = (object: any) =>
+  Object.keys(object).reduce((formData, key) => {
+    formData.append(key, object[key]);
+    return formData;
+  }, new FormData());
