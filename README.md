@@ -31,7 +31,7 @@
 
 - `/physician`:
     - GET: get all physicians in db
-    - POST: add new physician (next step if admin creates new doctor user)
+    - (XX: The AddUser already adds, not needed)POST: add new physician (next step if admin creates new doctor user)
 
 - `/physician/:id`
     - GET: get physician having this id (with all related info) (Please use this same id in user table as well)
@@ -50,7 +50,7 @@
 
 - `/appointment/:id`
     - GET: get appointment details
-    - PATCH: add medication
+    - (??: Added to Prescribes table, didn't add Medication to Appointment)PATCH: add medication
 
 - `/notify`
     - GET: send emails to all docs
