@@ -1,6 +1,12 @@
 from app import app, db
 from models import User, Physician, Patient, Undergoes, Appointment, Procedure, Medication
 from flask import request, make_response, jsonify
+from boto3 import session
+from botocore.client import Config
+from datetime import datetime
+
+ACCESS_ID = 'XXXXXXX'
+SECRET_KEY = 'XXXXXXX'
 
 from uuid import uuid4
 
@@ -172,6 +178,15 @@ def patient_ssn(ssn):
 @app.route('/patient/<int:ssn>/appointment', methods=['POST', 'GET'])
 def patient_ssn_appointment(ssn):
 
+    patient = Patient.query.filter_by(SSN = ssn).first()
+    if not patient:
+        return make_response(
+            jsonify(
+                {
+                    "message": "Not found"
+                }
+            ), 404
+        )
     if request.method == 'POST':
         # @Chirag the forms
         patient = ssn
@@ -218,6 +233,7 @@ def patient_ssn_appointment(ssn):
             all_engagements.append(physician_engagement)
         return make_response(
             jsonify({
+                "message":"All engagements retreived",
                 "phsyicians":all_engagements
                 
             }),200
@@ -227,6 +243,15 @@ def patient_ssn_appointment(ssn):
 @app.route('/patient/<int:ssn>/test', methods=['POST', 'GET'])
 def patient_ssn_test(ssn):
 
+    patient = Patient.query.filter_by(SSN = ssn).first()
+    if not patient:
+        return make_response(
+            jsonify(
+                {
+                    "message": "Not found"
+                }
+            ), 404
+        )
     if request.method == 'POST':
                 # @Chirag the forms
 
@@ -291,6 +316,7 @@ def patient_ssn_test(ssn):
             all_engagements.append(physician_engagement)
         return make_response(
             jsonify({
+                "message":"All engagements retreived",
                 "phsyicians":all_engagements
             }),200
         )
@@ -380,12 +406,52 @@ def procedure():
 
 @app.route('/procedure/<int:id>', methods=['PATCH'])
 def procedure_id(id):
-
+    procedure = Procedure.query.filter_by(Code = id)
+    if not procedure:
+        return make_response(
+            jsonify(
+                {
+                    "message": "Procedure Not found"
+                }
+            ), 404
+        )
     if request.method == 'PATCH':
+        #@Chirag the forms
+        file_name = request.form.get('file')
+        patient = request.form.get('patient')
+        procedure = id
+        date = request.form.get('date')
+        stay = request.form.get('stay')
+        undergo = Undergoes.query.filter_by(Patient=patient,Stay=stay,Procedure=procedure,Date=date).first()
+        if not undergo:
+            return make_response(
+            jsonify(
+                {
+                    "message": "Record Not found"
+                }
+            ), 404
+        )
+        session = session.Session()
+        client = session.client('s3',
+                        region_name='nyc3',
+                        endpoint_url='https://nyc3.digitaloceanspaces.com',
+                        aws_access_key_id=ACCESS_ID,
+                        aws_secret_access_key=SECRET_KEY)
 
-        # adding the recvd file to Undergoes
-        return f'PROCEDURE {id} PATCH'
-    return f'PROCEDURE {id} GET'
+        dest_path = str(patient) + "/" + str(procedure) + "/" + str(stay) + "/" + date.strftime("%Y-%m-%d-%H:%M:%S") + "." + file_name.split('.',1)[1]
+        client.upload_file(file_name, 'hello-spaces', dest_path)
+        undergo.Artifact = dest_path
+        undergo.Result = "Uploaded"
+        db.session.commit()
+        return make_response(
+            jsonify(
+                {
+                    "message": "File uploaded",
+                    "url": dest_path
+                }
+            ), 201
+        )
+    
 
 @app.route('/medication')
 def medication():
