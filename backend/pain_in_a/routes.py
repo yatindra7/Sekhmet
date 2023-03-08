@@ -72,7 +72,7 @@ def user():
     
     # get all users in db
     users =  User.query.all()
-    users = users if users is None else [sqlalchemy_row_to_dict(user) for user in users]
+    users = "Null" if users is None else [sqlalchemy_row_to_dict(user) for user in users]
 
     return make_response(jsonify(
             {
@@ -160,7 +160,7 @@ def patient():
     
     # get all patients in db
     patients = db.session.query(Patient, Physician).join(Physician, Physician.EmployeeID == Patient.PCP).all()
-    patients = patients if patients is None else [(sqlalchemy_row_to_dict(patient[0]), sqlalchemy_row_to_dict(patient[1])) for patient in patients]
+    patients = "Null" if patients is None else [(sqlalchemy_row_to_dict(patient[0]), sqlalchemy_row_to_dict(patient[1])) for patient in patients]
 
     return make_response(jsonify(
             {
@@ -170,7 +170,7 @@ def patient():
         ), 200)
 
 @app.route('/patient/<int:ssn>')
-@jwt_required()
+#@jwt_required()
 def patient_ssn(ssn):
 
     # getting all the patient information
@@ -375,17 +375,21 @@ def patient_ssn_test(ssn):
 def physician():
 
     # get all physicians in DB
+
+    physicians = [sqlalchemy_row_to_dict(physician) for physician in Physician.query.all()]
+    physicians = "Null" if physicians is None else physicians
+
     return make_response(jsonify(
             {
                 "message": "Retreived all physicians"
-                , "physicians": [sqlalchemy_row_to_dict(physician) for physician in Physician.query.all()]
+                , "physicians": physicians
             }
         ), 200)
 
 def get_prescriptions(appointment):
 
     prescriptions = Prescribes.query.filter_by(Appointment = appointment.AppointmentID)
-    return prescriptions if prescriptions is None else [sqlalchemy_row_to_dict(pres) for pres in prescriptions]
+    return "Null" if prescriptions is None else [sqlalchemy_row_to_dict(pres) for pres in prescriptions]
 
 @app.route('/physician/<int:id>')
 @jwt_required()
@@ -394,11 +398,20 @@ def physician_id(id):
     # get physician info (all)
 
     physician = sqlalchemy_row_to_dict(Physician.query.filter_by(EmployeeID = id).first())
+
+    if not physician:
+        return make_response(
+            jsonify(
+                {
+                    "message": "Not found"
+                }
+            ), 404
+        )
     
     # get the patient info from appointment
     
     appointments = Appointment.query.filter_by(Physician = physician["EmployeeID"])
-    appointments = appointments if appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in appointments]
+    appointments = "Null" if appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in appointments]
 
     return make_response(jsonify(
             {
@@ -419,7 +432,7 @@ def physician_engagements():
         return make_response(jsonify(
             {
                 "message": "Retreived all engagements"
-                , "physicians": physicians
+                , "physicians": "Null"
             }
         ), 200)
 
@@ -427,7 +440,7 @@ def physician_engagements():
 
     for physician in physicians:
         _appointments = Appointment.query.filter_by(Physician = physician.EmployeeID)
-        _appointments = _appointments if _appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in _appointments]
+        _appointments = "Null" if _appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in _appointments]
         appointments[physician.EmployeeID] = _appointments
 
     return make_response(jsonify(
@@ -443,7 +456,7 @@ def procedure():
 
     # get all procedures
     procedures = Procedure.query.all()
-    procedures = procedures if procedures is None else [sqlalchemy_row_to_dict(procedure) for procedure in procedures]
+    procedures = "Null" if procedures is None else [sqlalchemy_row_to_dict(procedure) for procedure in procedures]
     return make_response(jsonify(
             {
                 "message": "Retreived all procedures"
@@ -461,7 +474,7 @@ def procedure_id(id):
         return make_response(
             jsonify(
                 {
-                    "message": "Procedure Not found"
+                    "message": "Not found"
                 }
             ), 404
         )
@@ -508,7 +521,7 @@ def medication():
 
     # get all medications
     procedures = Medication.query.all()
-    procedures = procedures if procedures is None else [sqlalchemy_row_to_dict(procedure) for procedure in procedures]
+    procedures = "Null" if procedures is None else [sqlalchemy_row_to_dict(procedure) for procedure in procedures]
     return make_response(jsonify(
             {
                 "message": "Retreived all medication"
@@ -561,11 +574,11 @@ def appointment_id(id):
     # getting the physician
 
     physician = Physician.query.filter_by(EmployeeID = appointment.Physician).first()
-    physician = physician if physician is None else sqlalchemy_row_to_dict( physician )
+    physician = "Null" if physician is None else sqlalchemy_row_to_dict( physician )
     # getting the patient
 
     patient = Patient.query.filter_by(SSN = appointment.Patient).first()
-    patient = patient if patient is None else sqlalchemy_row_to_dict( patient )
+    patient = "Null" if patient is None else sqlalchemy_row_to_dict( patient )
     
     return make_response(
         jsonify(
