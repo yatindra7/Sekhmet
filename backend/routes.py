@@ -173,17 +173,127 @@ def patient_ssn(ssn):
 def patient_ssn_appointment(ssn):
 
     if request.method == 'POST':
-        return f'PATIENT {ssn} APPOINTMENT POST'
-    return f'PATIENT {ssn} APPOINTMENT GET'
-
+        # @Chirag the forms
+        patient = ssn
+        physician = request.form.get('physician')
+        start = request.form.get('start')
+        examinationroom = "cabin"
+        appointment_id = Appointment.query.count() + 1
+        nurses = Nurse.query.all()
+        nurseid = None
+        for nurse in nurses:
+            nurseid = nurse.EmployeeID
+            break
+        appointment = Appointment(AppointmentID=appointment_id,
+                                    Patient=patient,
+                                    Physician=physician,
+                                    Start=start,
+                                    ExaminationRoom=examinationroom,
+                                    PrepNurse=nurseid 
+                                )
+        db.session.add(appointment)
+        db.session.commit()
+        return make_response(jsonify(
+                {
+                    "message": "Appointment scheduled"
+                }
+            ) , 201)
+    
+    else:
+        all_engagements = []
+        physicians = Physician.query.all()
+        for physician in physicians:
+            engagements = []
+            appointments = Appointment.query.filter_by(Physician = physician.EmployeeID).all()
+            undergoes = Undergoes.query.filter_by(Physician = physician.EmployeeID).all()
+            for appointment in appointments:
+                engagements.append(appointment.Start)
+            for undergo in undergoes:
+                engagements.append(undergo.Date)
+            physician_engagement =  {
+                    'physician': physician.EmployeeID
+                    ,'engagements':engagements
+                }
+            
+            all_engagements.append(physician_engagement)
+        return make_response(
+            jsonify({
+                "phsyicians":all_engagements
+                
+            }),200
+        )
 # @Shreya and @Chirag
 
 @app.route('/patient/<int:ssn>/test', methods=['POST', 'GET'])
 def patient_ssn_test(ssn):
 
     if request.method == 'POST':
-        return f'PATIENT {ssn} TEST POST'
-    return f'PATIENT {ssn} TEST GET'
+                # @Chirag the forms
+
+        patient = ssn
+        physician = request.form.get('physician')
+        procedure = request.form.get('procedure')
+        date = request.form.get('date')
+        nurses = Nurse.query.all()
+        nurseid = None
+        for nurse in nurses:
+            nurseid = nurse.EmployeeID
+            break
+        result = ""
+        artifact = ""
+        stays = Stay.query.all()
+        stayid = -1
+        for stay in stays:
+            if stay.Patient == patient and stay.Start <= date and stay.End >= date:
+                stayid = stay.StayID
+                break
+
+        if stayid == -1:
+            return make_response(
+            jsonify(
+                {
+                    "message": "Invalid test date"
+                }
+            ), 404
+            )
+        else:
+            undergo = Undergoes(Patient=patient,
+                                Procedure=procedure,
+                                Stay=stayid,
+                                Date=date,
+                                Physician=physician,
+                                AssistingNurse=nurseid,
+                                Result=result,
+                                Artifact=artifact)
+            db.session.add(undergo)
+            db.session.commit()
+            return make_response(jsonify(
+                {
+                    "message": "Test scheduled"
+                }
+            ) , 201)
+    else:
+        all_engagements = []
+        physicians = Physician.query.all()
+        for physician in physicians:
+            engagements = []
+            appointments = Appointment.query.filter_by(Physician = physician.EmployeeID).all()
+            undergoes = Undergoes.query.filter_by(Physician = physician.EmployeeID).all()
+            for appointment in appointments:
+                engagements.append(appointment.Start)
+            for undergo in undergoes:
+                engagements.append(undergo.Date)
+            physician_engagement = {
+                    "physician": physician.EmployeeID
+                    ,"engagements":engagements
+                }
+            
+            all_engagements.append(physician_engagement)
+        return make_response(
+            jsonify({
+                "phsyicians":all_engagements
+            }),200
+        )
 
 @app.route('/physician', methods=['POST', 'GET'])
 def physician():
