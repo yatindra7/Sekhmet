@@ -56,8 +56,7 @@ export interface AppointmentType {
   Physician: PhysicianType;
   Start: string;
   ExaminationRoom: string;
-  Medication: Medication;
-  Dose: string;
+  Medication: Medication & { Dose: string };
 }
 
 export interface ProcedureType {

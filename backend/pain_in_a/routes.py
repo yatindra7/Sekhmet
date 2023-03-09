@@ -269,9 +269,11 @@ def patient_discharge_ssn(ssn):
         "staying": False
     }), 200
 
-def get_medication(code):
-    medication = db.session.query(Medication).filter(Medication.Code == code)
-    return sqlalchemy_row_to_dict(medication[0])
+def get_medication(prescribes):
+    medication = db.session.query(Medication).filter(Medication.Code == prescribes.Medication)
+    temp = sqlalchemy_row_to_dict(medication[0])
+    temp.update({'Dose': prescribes.Dose})
+    return temp
 
 @app.route('/patient/<int:ssn>')
 @jwt_required()
@@ -309,7 +311,7 @@ def patient_ssn(ssn):
                                      ).outerjoin(Prescribes, Prescribes.Appointment == Appointment.AppointmentID)
     
     if appointments:
-        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2].Medication) if appointment[2] != None else None) for appointment in appointments]
+        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2]) if appointment[2] != None else None) for appointment in appointments]
 
     # appointment data
     return make_response(
@@ -625,7 +627,7 @@ def medication():
             }
         ), 200)
 
-@app.route('/appointment/<int:id>', methods=['PATCH', 'GET'])
+@app.route('/appointment/<int:id>', methods=['POST', 'GET'])
 @jwt_required()
 def appointment_id(id):
     # getting the appointment info
@@ -640,7 +642,7 @@ def appointment_id(id):
             ), 404
         )
 
-    if request.method == 'PATCH':
+    if request.method == 'POST':
 
         # patching a medication into an appointment
         # I am basically adding it to prescribes
@@ -663,7 +665,7 @@ def appointment_id(id):
         db.session.commit()
         return make_response(
             jsonify({
-                "message": "Patched medication, dose into Prescribes"
+                "message": "Added medication"
             }), 201
         )
     

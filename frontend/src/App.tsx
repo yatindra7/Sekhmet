@@ -12,6 +12,7 @@ import PatientDetails from './pages/PatientDetails';
 import AddUser from './pages/AddUser';
 import Scheduler from './pages/Scheduler';
 import axios from 'axios';
+import Medicate from './pages/Medicate';
 
 const authToken = localStorage.getItem('authorizationtoken');
 if (authToken !== null) {
@@ -35,6 +36,7 @@ function App() {
                 <Route path=":ssn">
                   <Route index element={<PatientDetails />} />
                   <Route path="schedule/:type" element={<Scheduler />} />
+                  <Route path="medicate/:id" element={<Medicate />} />
                 </Route>
               </Route>
               <Route path="/admin">
