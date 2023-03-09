@@ -1,3 +1,4 @@
+import datetime
 from app import app, db, bcrypt, jwt
 from models import User, Physician, Patient, Undergoes, Appointment, Procedure, Medication, Prescribes, Nurse, Stay
 from flask import request, make_response, jsonify
@@ -193,6 +194,10 @@ def patient():
             }
         ), 200)
 
+def get_medication(code):
+    medication = db.session.query(Medication).filter(Medication.Code == code)
+    return sqlalchemy_row_to_dict(medication[0])
+
 @app.route('/patient/<int:ssn>')
 #@jwt_required()
 def patient_ssn(ssn):
@@ -223,14 +228,13 @@ def patient_ssn(ssn):
     if undergoes:
         undergoes = [(sqlalchemy_row_to_dict(undergone[0]), sqlalchemy_row_to_dict(undergone[1]), sqlalchemy_row_to_dict(undergone[2])) for undergone in undergoes]
     # appointments
-    appointments =  db.session.query(Appointment, Physician, Medication, Prescribes
-                                     ).join(Physician, Appointment.Physician == Physician.EmployeeID
-                                            ).filter(Appointment.Patient == ssn
-                                     ).join(Medication, Medication.Code == Prescribes.Medication
-                                            ).filter(Appointment.Patient == ssn
-                                            ).filter(Appointment.AppointmentID == Prescribes.Appointment)
+    appointments =  db.session.query(Appointment, Physician, Prescribes
+                                     ).filter(Appointment.Patient == ssn
+                                     ).filter(Appointment.Physician == Physician.EmployeeID
+                                     ).outerjoin(Prescribes, Prescribes.Appointment == Appointment.AppointmentID)
+    
     if appointments:
-        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), sqlalchemy_row_to_dict(appointment[2])) for appointment in appointments]
+        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2].Medication) if appointment[2] != None else None) for appointment in appointments]
 
     # appointment data
     return make_response(
@@ -262,7 +266,7 @@ def patient_ssn_appointment(ssn):
         # @Chirag the forms
         patient = ssn
         physician = request.form.get('physician')
-        start = request.form.get('start')
+        start = datetime.datetime.strptime(request.form.get('datetime'), "%Y-%m-%dT%H:%M:%S.%fZ")
         examinationroom = "cabin"
         appointment_id = Appointment.query.count() + 1
         nurses = Nurse.query.all()
@@ -331,7 +335,7 @@ def patient_ssn_test(ssn):
         patient = ssn
         physician = request.form.get('physician')
         procedure = request.form.get('procedure')
-        date = request.form.get('date')
+        date = datetime.datetime.strptime(request.form.get('datetime'), "%Y-%m-%dT%H:%M:%S.%fZ")
         nurses = Nurse.query.all()
         nurseid = None
         for nurse in nurses:
@@ -445,34 +449,27 @@ def physician_id(id):
             }
         ), 200)
 
-@app.route('/physician/engagements')
+@app.route('/physician/<int:id>/engagements')
 @jwt_required()
-def physician_engagements():
+def physician_engagements(id):
 
     # get physician schedule (basically all appointments)
     physicians = Physician.query.all()
 
-    if not physicians:
-        return make_response(jsonify(
-            {
-                "message": "Retreived all engagements"
-                , "physicians": "Null"
-            }
-        ), 200)
-
-    appointments = {}
-
-    for physician in physicians:
-        _appointments = Appointment.query.filter_by(Physician = physician.EmployeeID)
-        _appointments = "Null" if _appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in _appointments]
-        appointments[physician.EmployeeID] = _appointments
-
-    return make_response(jsonify(
-            {
-                "message": "Retreived all data"
-                , "appointments": appointments
-            }
-        ), 200)
+    engagements = []
+    appointments = Appointment.query.filter_by(Physician = id).all()
+    undergoes = Undergoes.query.filter_by(Physician = id).all()
+    for appointment in appointments:
+        engagements.append(appointment.Start.isoformat())
+    for undergo in undergoes:
+        engagements.append(undergo.Date.isoformat())
+    return make_response(
+        jsonify({
+            "message":"All engagements retreived",
+            "engagements":engagements
+            
+        }),200
+    )
 
 @app.route('/procedure')
 @jwt_required()

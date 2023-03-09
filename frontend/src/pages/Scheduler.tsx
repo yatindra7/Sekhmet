@@ -6,8 +6,9 @@ import { AiOutlineLoading } from 'react-icons/ai';
 import Select from 'react-select';
 import { BACKEND_URL, Physicians, Procedures } from '../data';
 import CalendarComponent from 'react-calendar';
-import { getDateString, handleAxiosError } from '../helpers';
+import { getDateString, getFormData, handleAxiosError } from '../helpers';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 type TimeSlot = {
   start: string;
@@ -26,6 +27,7 @@ function Scheduler() {
   const [selectedSlot, setSelectedSlot] = useState<number>(-1);
   const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
   const [procedures, setProcedures] = useState<ProcedureType[]>([]);
+  const [isSlotsLoading, setIsSlotsLoading] = useState(false);
 
   useEffect(() => {
     axios
@@ -44,9 +46,18 @@ function Scheduler() {
 
   const onSubmit = (data: SchedulerFormType) => {
     setIsSubmitLoading(true);
-    console.log(data);
-    setIsSubmitLoading(false);
-    navigate(`/patient/${params.ssn}`);
+    const formdata = getFormData(data);
+    axios
+      .post(`${BACKEND_URL}/patient/${params.ssn}/${type}`, formdata)
+      .then((response) => {
+        toast.success(response.data.message);
+        setIsSubmitLoading(false);
+        navigate(`/patient/${params.ssn}`);
+      })
+      .catch((error) => {
+        handleAxiosError(error);
+        setIsSubmitLoading(false);
+      });
   };
 
   const { handleSubmit, changeValue, data, errors } = useForm<SchedulerFormType>({
@@ -78,18 +89,33 @@ function Scheduler() {
       setSlots([]);
       setSelectedSlot(-1);
     } else {
+      setIsSlotsLoading(true);
       const mySlots: TimeSlot[] = [
         { start: '10', end: '11', isAvailable: true },
         { start: '11', end: '12', isAvailable: true },
-        { start: '12', end: '13', isAvailable: false },
+        { start: '12', end: '13', isAvailable: true },
         { start: '13', end: '14', isAvailable: true },
         { start: '14', end: '15', isAvailable: true },
         { start: '15', end: '16', isAvailable: true },
         { start: '16', end: '17', isAvailable: true },
         { start: '17', end: '18', isAvailable: true },
       ];
-      setSlots(mySlots);
-      setSelectedSlot(-1);
+      axios
+        .get(`${BACKEND_URL}/physician/${data.physician}/engagements`)
+        .then((response) => {
+          response.data.engagements.forEach((isotimestamp: string) => {
+            const timestamp = new Date(isotimestamp);
+            if (timestamp.toDateString() === date.toDateString()) {
+              mySlots.forEach((slot) => {
+                if (timestamp.getHours().toString() === slot.start) slot.isAvailable = false;
+              });
+            }
+          });
+          setSlots(mySlots);
+          setSelectedSlot(-1);
+          setIsSlotsLoading(false);
+        })
+        .catch((error) => handleAxiosError(error));
     }
   }, [data.physician, date]);
 
@@ -137,22 +163,26 @@ function Scheduler() {
         </form>
       </div>
       <div className="panel">
-        <CalendarComponent minDate={new Date()} value={date} onChange={(date: Date) => setDate(date)} />
+        <CalendarComponent value={date} onChange={(date: Date) => setDate(date)} />
         <div className="title">Please select an available slot below</div>
-        <div className="slot-list">
-          {slots.map((slot, index) => (
-            <button
-              key={slot.start}
-              className="slot-btn"
-              type="button"
-              onClick={() => slotSelectHandler(slot, index, date)}
-              data-active={index === selectedSlot}
-              disabled={!slot.isAvailable}
-            >
-              {slot.start} - {slot.end} hours
-            </button>
-          ))}
-        </div>
+        {!isSlotsLoading ? (
+          <div className="slot-list">
+            {slots.map((slot, index) => (
+              <button
+                key={slot.start}
+                className="slot-btn"
+                type="button"
+                onClick={() => slotSelectHandler(slot, index, date)}
+                data-active={index === selectedSlot}
+                disabled={!slot.isAvailable}
+              >
+                {slot.start} - {slot.end} hours
+              </button>
+            ))}
+          </div>
+        ) : (
+          'Loading'
+        )}
         {errors.datetime && <div className="error">{errors.datetime}</div>}
       </div>
     </div>
