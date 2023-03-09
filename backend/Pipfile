@@ -13,7 +13,6 @@ psycopg2 = "*"
 botocore = "*"
 flask-sqlalchemy = "*"
 flask-cors = "*"
-boto3 = "*"
 flask_jwt_extended = "*"
 python-dotenv = "*"
 
