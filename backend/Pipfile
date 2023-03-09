@@ -10,15 +10,9 @@ flask-login = "*"
 flask-sqlalchemy = "*"
 flask-cors = "*"
 boto3 = "*"
-<<<<<<< Updated upstream
 flask_jwt_extended = "*"
-=======
-<<<<<<< HEAD
 flask-jwt-extended = "*"
-=======
 flask_jwt_extended = "*"
->>>>>>> 1f2e7ab93889aefaddc10ef50c6abbfe39ab12c9
->>>>>>> Stashed changes
 
 [dev-packages]
 
