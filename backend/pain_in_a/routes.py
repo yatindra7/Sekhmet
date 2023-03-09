@@ -562,14 +562,32 @@ def physician_id(id):
     
     # get the patient info from appointment
     
-    appointments = Appointment.query.filter_by(Physician = physician["EmployeeID"])
-    appointments = "Null" if appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in appointments]
+    # appointments = Appointment.query.filter_by(Physician = physician["EmployeeID"])
+    # appointments = "Null" if appointments is None else [(sqlalchemy_row_to_dict(appointment), get_prescriptions(appointment)) for appointment in appointments]
+
+    # undergoes data
+    undergoes = db.session.query(Undergoes, Physician, Procedure
+                                 ).join(Physician, Undergoes.Physician == Physician.EmployeeID
+                                        ).filter(Undergoes.Physician == id
+                                 ).join(Procedure, Undergoes.Procedure == Procedure.Code
+                                        ).filter(Undergoes.Physician == id)
+    if undergoes:
+        undergoes = [(sqlalchemy_row_to_dict(undergone[0]), sqlalchemy_row_to_dict(undergone[1]), sqlalchemy_row_to_dict(undergone[2])) for undergone in undergoes]
+    # appointments
+    appointments =  db.session.query(Appointment, Physician, Prescribes
+                                     ).filter(Appointment.Physician == id
+                                     ).filter(Appointment.Physician == Physician.EmployeeID
+                                     ).outerjoin(Prescribes, Prescribes.Appointment == Appointment.AppointmentID)
+    
+    if appointments:
+        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2]) if appointment[2] != None else None) for appointment in appointments]
 
     return make_response(jsonify(
             {
                 "message": "Retreived all data"
                 , "physician": physician
                 , "appointments": appointments
+                , "undergoes": undergoes
             }
         ), 200)
 

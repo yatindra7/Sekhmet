@@ -119,3 +119,11 @@
     cursor: pointer;
   }
 }
+
+.patient-details.physician-details {
+  .top {
+    .meta {
+      max-width: 100%;
+    }
+  }
+}
