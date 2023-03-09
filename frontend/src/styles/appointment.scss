@@ -26,4 +26,17 @@
   .date {
     color: rgba($text, 0.75);
   }
+
+  .medicate-btn {
+    width: 6rem;
+    margin-left: 1rem;
+    outline: none;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    background-color: rgba($white, 0.5);
+    cursor: pointer;
+  }
 }

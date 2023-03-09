@@ -4,8 +4,13 @@ import { BsCalendarDateFill } from 'react-icons/bs';
 import { RiHotelBedFill, RiStethoscopeFill } from 'react-icons/ri';
 import { TbNurse } from 'react-icons/tb';
 import { GiDoor, GiMedicines } from 'react-icons/gi';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Appointment(props: { data: AppointmentType }) {
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
   return (
     <div className="appointment-details">
       <div className="info date">
@@ -31,7 +36,19 @@ function Appointment(props: { data: AppointmentType }) {
       <div className="row">
         <div className="info meds">
           <GiMedicines size={25} />
-          {props.data.Medication.Name} ({props.data.Dose})
+          {props.data.Medication.Name || user?.role !== 'Doctor' ? (
+            <>
+              {props.data.Medication.Name} ({props.data.Medication.Dose})
+            </>
+          ) : (
+            <button
+              className="medicate-btn"
+              type="button"
+              onClick={() => navigate(`medicate/${props.data.AppointmentID}`)}
+            >
+              Prescribe
+            </button>
+          )}
         </div>
         <div className="info room">
           <GiDoor size={25} />

@@ -42,6 +42,14 @@ function Patient() {
         accessor: 'Name',
       },
       {
+        Header: 'Age',
+        accessor: 'Age',
+      },
+      {
+        Header: 'Gender',
+        accessor: 'Gender',
+      },
+      {
         Header: 'Address',
         accessor: 'Address',
       },

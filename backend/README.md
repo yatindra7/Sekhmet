@@ -1,10 +1,9 @@
-To run the backend:
+# To run the backend:
 
-$ `psql`
-# Inside PSQL
-$ `CREATE DATABASE <DB_NAME>`
-$ `make db`
-$ `make`
+$ `psql` </br>
+db=# `CREATE DATABASE <DB_NAME>` </br>
+$ `make db` </br>
+$ `make` </br>
 
 In case of `sqlalchemy.exc.IntegrityError` error.
 Change `DBNAME` from `ass9` to `ass[10..n].db` in `Makefile`.

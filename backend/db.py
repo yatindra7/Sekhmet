@@ -4,15 +4,19 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 import sys
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
 
 if len(sys.argv) != 2:
     print("Usage: db.py <db_name>.db")
 
 # give as first argument
-dbname = sys.argv[1]
-_uname = 'yatindra'
-_password = 'Ayhind2123'
-_host = 'localhost'
+dbname = os.getenv('DBNAME')
+_uname = os.getenv('UNAME')
+_password = os.getenv('PASSWORD')
+_host = os.getenv('HOST')
 
 app = Flask(__name__)
 CORS(app)

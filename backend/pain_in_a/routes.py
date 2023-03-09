@@ -4,13 +4,14 @@ from models import User, Physician, Patient, Undergoes, Appointment, Procedure, 
 from flask import request, make_response, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, current_user
 
-from boto3 import session
-from botocore.client import Config
+import boto3
+import botocore
+import os
 
 from uuid import uuid4
 
-ACCESS_ID = 'XXXXXXX'
-SECRET_KEY = 'XXXXXXX'
+SPACES_KEY = os.getenv('SPACES_KEY')
+SPACES_SECRET = os.getenv('SPACES_SECRET')
 
 # todo: natural join the tables in question
 
@@ -283,9 +284,11 @@ def patient_discharge_ssn(ssn):
         "staying": False
     }), 200
 
-def get_medication(code):
-    medication = db.session.query(Medication).filter(Medication.Code == code)
-    return sqlalchemy_row_to_dict(medication[0])
+def get_medication(prescribes):
+    medication = db.session.query(Medication).filter(Medication.Code == prescribes.Medication)
+    temp = sqlalchemy_row_to_dict(medication[0])
+    temp.update({'Dose': prescribes.Dose})
+    return temp
 
 @app.route('/patient/<int:ssn>')
 #@jwt_required()
@@ -323,7 +326,7 @@ def patient_ssn(ssn):
                                      ).outerjoin(Prescribes, Prescribes.Appointment == Appointment.AppointmentID)
     
     if appointments:
-        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2].Medication) if appointment[2] != None else None) for appointment in appointments]
+        appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2]) if appointment[2] != None else None) for appointment in appointments]
 
     patient_stays = Stay.query.filter_by(Patient = ssn)
     
@@ -615,7 +618,7 @@ def procedure():
 
 # @Shreya and @Chirag
 
-@app.route('/procedure/<int:id>', methods=['PATCH'])
+@app.route('/procedure/<int:id>', methods=['POST'])
 @jwt_required()
 def procedure_id(id):
     procedure = Procedure.query.filter_by(Code = id)
@@ -627,13 +630,14 @@ def procedure_id(id):
                 }
             ), 404
         )
-    if request.method == 'PATCH':
+    if request.method == 'POST':
         #@Chirag the forms
-        file_name = request.form.get('file')
+        file = request.files['file']
         patient = request.form.get('patient')
         procedure = id
-        date = request.form.get('date')
+        date = datetime.datetime.strptime(request.form.get('date'), "%Y-%m-%d %H:%M:%S")
         stay = request.form.get('stay')
+        result = request.form.get('result')
         undergo = Undergoes.query.filter_by(Patient=patient,Stay=stay,Procedure=procedure,Date=date).first()
         if not undergo:
             return make_response(
@@ -643,23 +647,24 @@ def procedure_id(id):
                 }
             ), 404
         )
-        session = session.Session()
+        session = boto3.session.Session()
         client = session.client('s3',
+                        config=botocore.config.Config(s3={'addressing_style': 'virtual'}),
                         region_name='nyc3',
                         endpoint_url='https://nyc3.digitaloceanspaces.com',
-                        aws_access_key_id=ACCESS_ID,
-                        aws_secret_access_key=SECRET_KEY)
-
-        dest_path = str(patient) + "/" + str(procedure) + "/" + str(stay) + "/" + date.strftime("%Y-%m-%d-%H:%M:%S") + "." + file_name.split('.',1)[1]
-        client.upload_file(file_name, 'hello-spaces', dest_path)
-        undergo.Artifact = dest_path
-        undergo.Result = "Uploaded"
+                        aws_access_key_id=SPACES_KEY,
+                        aws_secret_access_key=SPACES_SECRET)
+        dest_filename = str(patient) + "-" + str(procedure) + "-" + str(stay) + "-" + date.strftime("%Y-%m-%d-%H:%M:%S") + "." + file.filename.split('.',1)[1]
+        client.upload_fileobj(file, 'sekhmet', dest_filename, ExtraArgs={ 'ACL': 'public-read' })
+        client.put_object_acl( ACL='public-read', Bucket='sekhmet', Key=dest_filename )
+        undergo.Artifact = "https://sekhmet.nyc3.cdn.digitaloceanspaces.com/" + dest_filename
+        undergo.Result = result
         db.session.commit()
         return make_response(
             jsonify(
                 {
                     "message": "File uploaded",
-                    "url": dest_path
+                    "url": dest_filename
                 }
             ), 201
         )
@@ -678,7 +683,7 @@ def medication():
             }
         ), 200)
 
-@app.route('/appointment/<int:id>', methods=['PATCH', 'GET'])
+@app.route('/appointment/<int:id>', methods=['POST', 'GET'])
 @jwt_required()
 def appointment_id(id):
     # getting the appointment info
@@ -693,7 +698,7 @@ def appointment_id(id):
             ), 404
         )
 
-    if request.method == 'PATCH':
+    if request.method == 'POST':
 
         # patching a medication into an appointment
         # I am basically adding it to prescribes
@@ -716,7 +721,7 @@ def appointment_id(id):
         db.session.commit()
         return make_response(
             jsonify({
-                "message": "Patched medication, dose into Prescribes"
+                "message": "Added medication"
             }), 201
         )
     
