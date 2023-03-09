@@ -1,9 +1,9 @@
-DBNAME = ass3
+DBNAME = ass9
 PYTHON = python3
 APP_FILE = app.py
 DB_FILE = db.py
 
-run: db APP_FILE
+run: APP_FILE
 	${PYTHON} ${APP_FILE} ${DBNAME}
 
 db: DB_FILE

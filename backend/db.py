@@ -159,7 +159,7 @@ class Stay(db.Model):
     Room = db.Column(db.Integer, db.ForeignKey('room.Number'), nullable=False)
     rooms = db.relationship("Room", backref="room_stay")
     Start = db.Column(db.DateTime, nullable=False)
-    End = db.Column(db.DateTime, nullable=False)
+    End = db.Column(db.DateTime, nullable=True)
 
 class Undergoes(db.Model):
     __tablename__ = 'undergoes'

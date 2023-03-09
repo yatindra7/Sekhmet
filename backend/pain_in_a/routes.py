@@ -1,6 +1,6 @@
 import datetime
 from app import app, db, bcrypt, jwt
-from models import User, Physician, Patient, Undergoes, Appointment, Procedure, Medication, Prescribes, Nurse, Stay
+from models import User, Physician, Patient, Undergoes, Appointment, Procedure, Medication, Prescribes, Nurse, Stay, Room
 from flask import request, make_response, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, current_user
 
@@ -146,6 +146,20 @@ def token_user():
         }
     )
 
+def get_room():
+
+    room = Room.query.filter_by(Unavailable = False).first()
+
+    if room:
+
+        room.Unavailable = True
+        db.session.commit()
+
+        return room.Number
+    
+    return "Null"
+
+
 @app.route('/patient', methods=['POST', 'GET'])
 @jwt_required()
 def patient():
@@ -176,6 +190,30 @@ def patient():
 
         db.session.add(patient)
         db.session.commit()
+
+        room = get_room()
+
+        if room == "Null":
+            return make_response(
+                jsonify(
+                {
+                    "message": "Room unavailable"
+                }
+                ), 400
+            )
+        
+        stay_id = int(uuid4()) % UUID_RANGE_LIMIT
+        start = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        
+        stay = Stay(
+            StayID = stay_id
+            , Patient = ssn
+            , Room = room
+            , Start = start
+        )
+
+        db.session.add(stay)
+        db.session.commit()
         
         return make_response(jsonify(
                 {
@@ -194,12 +232,31 @@ def patient():
             }
         ), 200)
 
+@app.route('/patient/discharge/<int:ssn>', methods=['POST'])
+@jwt_required()
+def patient_discharge_ssn(ssn):
+
+    stay = Stay.query.filter_by(Patient = ssn, End = None).first()
+    stay.End = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    room = stay.Room
+    room = Room.query.filter_by(Number = room).first()
+    room.Unavailable = False
+
+    db.session.commit()
+
+    return jsonify(
+        {
+            "message": "Patient Discharged"
+        }
+    ), 201
+
 def get_medication(code):
     medication = db.session.query(Medication).filter(Medication.Code == code)
     return sqlalchemy_row_to_dict(medication[0])
 
 @app.route('/patient/<int:ssn>')
-#@jwt_required()
+@jwt_required()
 def patient_ssn(ssn):
 
     # getting all the patient information
