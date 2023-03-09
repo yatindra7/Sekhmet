@@ -1,7 +1,15 @@
 {
     "_meta": {
         "hash": {
+<<<<<<< Updated upstream
             "sha256": "defb16b4ec6a181dca5fbb1a969badd348b4771f37467db15855f38d07a3502c"
+=======
+<<<<<<< HEAD
+            "sha256": "cbc154fa6a48bb87e83aa3febf3bba41f900579faad7b981b46dcb4dfee61816"
+=======
+            "sha256": "defb16b4ec6a181dca5fbb1a969badd348b4771f37467db15855f38d07a3502c"
+>>>>>>> 1f2e7ab93889aefaddc10ef50c6abbfe39ab12c9
+>>>>>>> Stashed changes
         },
         "pipfile-spec": 6,
         "requires": {
