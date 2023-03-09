@@ -164,6 +164,13 @@ def get_room():
 @jwt_required()
 def patient():
 
+    if current_user.role != 'Front Desk Operator':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
+
     if request.method == 'POST':
         
         # @Chirag the forms
@@ -236,6 +243,13 @@ def patient():
 @jwt_required()
 def patient_discharge_ssn(ssn):
 
+    if current_user.role != 'Front Desk Operator':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
+
     if request.method == 'POST':
         stay = Stay.query.filter_by(Patient = ssn, End = None).first()
         stay.End = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -274,7 +288,7 @@ def get_medication(code):
     return sqlalchemy_row_to_dict(medication[0])
 
 @app.route('/patient/<int:ssn>')
-@jwt_required()
+#@jwt_required()
 def patient_ssn(ssn):
 
     # getting all the patient information
@@ -311,6 +325,17 @@ def patient_ssn(ssn):
     if appointments:
         appointments = [(sqlalchemy_row_to_dict(appointment[0]), sqlalchemy_row_to_dict(appointment[1]), get_medication(appointment[2].Medication) if appointment[2] != None else None) for appointment in appointments]
 
+    patient_stays = Stay.query.filter_by(Patient = ssn)
+    
+    for stay in patient_stays:
+        if stay.End is None:
+            return jsonify({
+                "patient": patient
+                , "undergoes": undergoes
+                , "appointments": appointments
+                , "staying": True
+            }), 200
+
     # appointment data
     return make_response(
         jsonify(
@@ -318,6 +343,7 @@ def patient_ssn(ssn):
                 "patient": patient
                 , "undergoes": undergoes
                 , "appointments": appointments
+                , "staying": False
             }
         ), 200
     )
@@ -327,6 +353,13 @@ def patient_ssn(ssn):
 @app.route('/patient/<int:ssn>/appointment', methods=['POST', 'GET'])
 @jwt_required()
 def patient_ssn_appointment(ssn):
+
+    if current_user.role != 'Front Desk Operator':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
 
     patient = Patient.query.filter_by(SSN = ssn).first()
     if not patient:
@@ -394,6 +427,13 @@ def patient_ssn_appointment(ssn):
 @app.route('/patient/<int:ssn>/test', methods=['POST', 'GET'])
 @jwt_required()
 def patient_ssn_test(ssn):
+
+    if current_user.role != 'Front Desk Operator':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
 
     patient = Patient.query.filter_by(SSN = ssn).first()
     if not patient:
@@ -498,6 +538,12 @@ def get_prescriptions(appointment):
 @jwt_required()
 def physician_id(id):
 
+    if current_user.role != 'Doctor':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
     # get physician info (all)
 
     physician = sqlalchemy_row_to_dict(Physician.query.filter_by(EmployeeID = id).first())
@@ -527,6 +573,13 @@ def physician_id(id):
 @app.route('/physician/<int:id>/engagements')
 @jwt_required()
 def physician_engagements(id):
+
+    if current_user.role != 'Front Desk Operator':
+        return jsonify(
+            {
+                "message": "Unauthorized"
+            }
+        ), 403
 
     # get physician schedule (basically all appointments)
     physicians = Physician.query.all()
