@@ -5,7 +5,10 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 
+from dotenv import load_dotenv
 import sys
+
+load_dotenv()
 
 if len(sys.argv) != 2:
     print("Usage: app.py <db_name>.db")

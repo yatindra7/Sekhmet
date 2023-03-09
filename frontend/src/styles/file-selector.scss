@@ -1,0 +1,77 @@
+.file-selector {
+  position: relative;
+  width: 100%;
+  min-height: 5rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  border: 1px dashed rgba($primary, 0.8);
+
+  div {
+    font-size: 1rem;
+    font-weight: 500;
+
+    color: rgba($text, 0.6);
+  }
+
+  .file-uploader-input {
+    display: none;
+  }
+}
+
+.file-uploader {
+  width: 100%;
+
+  .file-preview {
+    min-height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+
+    border: 1px dashed $primary;
+  }
+
+  .file-name,
+  .loading {
+    font-size: 1.1rem;
+    font-weight: 500;
+    max-width: 75%;
+
+    color: $text;
+  }
+
+  .file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  button {
+    margin-right: 0.5rem;
+    border: none;
+    outline: none;
+    padding: 0.6rem 0.6rem;
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+
+    background-color: rgba($primary, 0.2);
+    color: $primary;
+    box-shadow: 0 1px 2px rgba(#000, 8%), 0 4px 12px rgba(#000, 5%);
+  }
+}
+
+@keyframes loading-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
