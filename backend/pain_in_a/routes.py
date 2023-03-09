@@ -232,24 +232,42 @@ def patient():
             }
         ), 200)
 
-@app.route('/patient/discharge/<int:ssn>', methods=['POST'])
+@app.route('/patient/discharge/<int:ssn>', methods=['GET', 'POST'])
 @jwt_required()
 def patient_discharge_ssn(ssn):
 
-    stay = Stay.query.filter_by(Patient = ssn, End = None).first()
-    stay.End = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    if request.method == 'POST':
+        stay = Stay.query.filter_by(Patient = ssn, End = None).first()
+        stay.End = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    room = stay.Room
-    room = Room.query.filter_by(Number = room).first()
-    room.Unavailable = False
+        room = stay.Room
+        room = Room.query.filter_by(Number = room).first()
+        room.Unavailable = False
 
-    db.session.commit()
+        db.session.commit()
 
-    return jsonify(
-        {
-            "message": "Patient Discharged"
-        }
-    ), 201
+        return jsonify(
+            {
+                "message": "Patient Discharged"
+            }
+        ), 201
+    
+    patient_stays = Stay.query.filter_by(Patient = ssn)
+
+    if patient_stays is None:
+        return jsonify({
+            "message": "Patient not found"
+        }), 404
+    
+    for stay in patient_stays:
+        if stay.End is None:
+            return jsonify({
+                "staying": True
+            }), 200
+    
+    return jsonify({
+        "staying": False
+    }), 200
 
 def get_medication(code):
     medication = db.session.query(Medication).filter(Medication.Code == code)
