@@ -5,14 +5,14 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-jwt-extended = "*"
 flask-bcrypt = "*"
 flask-login = "*"
+boto3 = "*"
+psycopg2 = "*"
+botocore = "*"
 flask-sqlalchemy = "*"
 flask-cors = "*"
-boto3 = "*"
-flask_jwt_extended = "*"
-flask-jwt-extended = "*"
-flask_jwt_extended = "*"
 
 [dev-packages]
 

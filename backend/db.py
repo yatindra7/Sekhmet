@@ -10,11 +10,14 @@ if len(sys.argv) != 2:
 
 # give as first argument
 dbname = sys.argv[1]
+_uname = 'yatindra'
+_password = 'Ayhind2123'
+_host = 'localhost'
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{dbname}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{_uname}:{_password}@{_host}/{dbname}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 

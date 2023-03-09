@@ -1,4 +1,4 @@
-DBNAME = trial6.db
+DBNAME = ass3
 PYTHON = python3
 APP_FILE = app.py
 DB_FILE = db.py

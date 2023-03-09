@@ -41,7 +41,7 @@ def user():
         user = User(
             id = unique_id
             , email = email
-            , password = bcrypt.generate_password_hash(password)
+            , password = bcrypt.generate_password_hash(password).decode('utf-8')
             , role = role
             , name=name
             )

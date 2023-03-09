@@ -12,12 +12,15 @@ if len(sys.argv) != 2:
 
 # give as first argument
 dbname = sys.argv[1]
+_uname = 'yatindra'
+_password = 'Ayhind2123'
+_host = 'localhost'
 
 app = Flask(__name__)
 
 # configs (to be changed)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{dbname}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{_uname}:{_password}@{_host}/{dbname}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_ERROR_MESSAGE_KEY'] = 'message'
 
