@@ -54,7 +54,9 @@ function PatientDetails() {
           />
           <div className="meta">
             <div className="name">{patientData.Name}</div>
-            <div className="secondary">Male, 24 years old</div>
+            <div className="secondary">
+              {patientData.Gender}, {patientData.Age} years old
+            </div>
             <div className="doc">
               <RiStethoscopeFill size={25} />
               {patientData.PCP.Name}
