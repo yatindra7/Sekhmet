@@ -165,7 +165,7 @@ def get_room():
 @jwt_required()
 def patient():
 
-    if current_user.role != 'Front Desk Operator':
+    if current_user.role != 'Front Desk Operator' and current_user.role != 'Doctor':
         return jsonify(
             {
                 "message": "Unauthorized"
@@ -211,7 +211,7 @@ def patient():
             )
         
         stay_id = int(uuid4()) % UUID_RANGE_LIMIT
-        start = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        start = datetime.datetime.now()
         
         stay = Stay(
             StayID = stay_id
@@ -464,7 +464,7 @@ def patient_ssn_test(ssn):
         stays = Stay.query.all()
         stayid = -1
         for stay in stays:
-            if stay.Patient == patient and stay.Start <= date and stay.End >= date:
+            if stay.Patient == patient and stay.Start <= date and (stay.End == None or stay.End >= date):
                 stayid = stay.StayID
                 break
 

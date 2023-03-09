@@ -7,6 +7,8 @@ import { Appointments, Procedures, BACKEND_URL } from '../data';
 import Appointment from '../components/Appointment';
 import Procedure from '../components/Procedure';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { handleAxiosError } from '../helpers';
 
 function PatientDetails() {
   const params = useParams();
@@ -15,6 +17,7 @@ function PatientDetails() {
   const [patientData, setPatientData] = useState<PatientType>();
   const [appointmentData, setAppointmentData] = useState<AppointmentType[]>([]);
   const [procedureData, setProcedureData] = useState<UndergoesType[]>([]);
+  const [isStaying, setIsStaying] = useState(false);
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/patient/${params.ssn}`).then((response) => {
@@ -37,8 +40,19 @@ function PatientDetails() {
           return temp;
         }),
       );
+      setIsStaying(response.data.staying);
     });
   }, [params]);
+
+  const dischargeHandler = () => {
+    axios
+      .post(`${BACKEND_URL}/patient/discharge/${params.ssn}`)
+      .then(() => {
+        toast.success('Patient discharged successfully');
+        navigate('/patient');
+      })
+      .catch((error) => handleAxiosError(error));
+  };
 
   if (!patientData) return null;
 
@@ -78,6 +92,11 @@ function PatientDetails() {
               <strong>Insurance: </strong>
               {patientData.InsuranceID}
             </div>
+            {isStaying && (
+              <button type="button" className="discharge-btn" onClick={() => dischargeHandler()}>
+                Discharge
+              </button>
+            )}
           </div>
         </div>
         <div className="tests">
