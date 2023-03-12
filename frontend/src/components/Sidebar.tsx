@@ -7,7 +7,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 function Sidebar() {
   const navigate = useNavigate();
-  const { logoutHandler } = useAuthContext();
+  const { user, logoutHandler } = useAuthContext();
 
   return (
     <div className="sidebar">
@@ -16,15 +16,21 @@ function Sidebar() {
         <NavLink to="/">
           <BiHomeAlt size={30} />
         </NavLink>
-        <NavLink to="/doctor">
-          <RiStethoscopeLine size={30} />
-        </NavLink>
-        <NavLink to="/patient">
-          <RiHotelBedFill size={30} />
-        </NavLink>
-        <NavLink to="/admin">
-          <RiAdminLine size={30} />
-        </NavLink>
+        {user?.role === 'Doctor' && (
+          <NavLink to="/doctor">
+            <RiStethoscopeLine size={30} />
+          </NavLink>
+        )}
+        {user?.role !== 'Admin' && (
+          <NavLink to="/patient">
+            <RiHotelBedFill size={30} />
+          </NavLink>
+        )}
+        {user?.role === 'Admin' && (
+          <NavLink to="/admin">
+            <RiAdminLine size={30} />
+          </NavLink>
+        )}
       </div>
       <div className="logout">
         <RiLogoutBoxRLine size={30} onClick={() => logoutHandler()} />

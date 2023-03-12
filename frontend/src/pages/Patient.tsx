@@ -8,9 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../data';
 import { handleAxiosError } from '../helpers';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Patient() {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const [query, setQuery] = useState<string>('');
   const [patients, setPatients] = useState<PatientType[]>([]);
@@ -93,9 +95,11 @@ function Patient() {
             placeholder="Type here to search patients..."
           />
         </div>
-        <button type="button" className="add-btn" onClick={() => navigate('/patient/new')}>
-          Add +
-        </button>
+        {user?.role === 'Front Desk Operator' && (
+          <button type="button" className="add-btn" onClick={() => navigate('/patient/new')}>
+            Add +
+          </button>
+        )}
       </div>
       <Table columns={columns} data={data} />
     </div>

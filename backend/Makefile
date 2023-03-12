@@ -1,4 +1,4 @@
-DBNAME = ass9
+DBNAME = sekhmet
 PYTHON = python3
 APP_FILE = app.py
 DB_FILE = db.py

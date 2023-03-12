@@ -9,10 +9,12 @@ import Procedure from '../components/Procedure';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { handleAxiosError } from '../helpers';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function PatientDetails() {
   const params = useParams();
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const [patientData, setPatientData] = useState<PatientType>();
   const [appointmentData, setAppointmentData] = useState<AppointmentType[]>([]);
@@ -102,9 +104,11 @@ function PatientDetails() {
         <div className="tests">
           <div className="top-bar">
             <div className="title">Procedures and tests</div>
-            <button type="button" className="add-btn" onClick={() => navigate('schedule/test')}>
-              Add +
-            </button>
+            {user?.role === 'Front Desk Operator' && (
+              <button type="button" className="add-btn" onClick={() => navigate('schedule/test')}>
+                Add +
+              </button>
+            )}
           </div>
           <div className="list">
             {procedureData.map((procedure) => (
@@ -116,9 +120,11 @@ function PatientDetails() {
       <div className="panel appointment">
         <div className="top-bar">
           <div className="title">Appointments</div>
-          <button type="button" className="add-btn" onClick={() => navigate('schedule/appointment')}>
-            Add +
-          </button>
+          {user?.role === 'Front Desk Operator' && (
+            <button type="button" className="add-btn" onClick={() => navigate('schedule/appointment')}>
+              Add +
+            </button>
+          )}
         </div>
         <div className="list">
           {appointmentData.map((appointment) => (

@@ -8,9 +8,11 @@ import { getDateTimeStringFromISOString } from '../helpers';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { CgInfo } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Procedure(props: { data: UndergoesType }) {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   return (
     <div className="procedure-details">
@@ -60,16 +62,18 @@ function Procedure(props: { data: UndergoesType }) {
           )}
         </div>
       ) : (
-        <button
-          className="result-btn"
-          type="button"
-          onClick={() => {
-            localStorage.setItem('procedureDetails', JSON.stringify(props.data));
-            navigate(`result`);
-          }}
-        >
-          Add result
-        </button>
+        user?.role === 'Data Entry Operator' && (
+          <button
+            className="result-btn"
+            type="button"
+            onClick={() => {
+              localStorage.setItem('procedureDetails', JSON.stringify(props.data));
+              navigate(`result`);
+            }}
+          >
+            Add result
+          </button>
+        )
       )}
     </div>
   );
