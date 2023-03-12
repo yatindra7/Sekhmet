@@ -21,6 +21,24 @@ def sqlalchemy_row_to_dict(row):
 
 UUID_RANGE_LIMIT = 1000000
 
+@app.route('/stats', methods=['GET'])
+def stats():
+    users = User.query.count()
+    patients = Patient.query.count()
+    procedures = Undergoes.query.count()
+    appointments = Appointment.query.count()
+    rooms = Room.query.count()
+    return make_response(jsonify(
+            {
+                "message": "Retreived stats"
+                , "users": users
+                , "patients": patients
+                , "procedures": procedures
+                , "appointments": appointments
+                , "rooms": rooms
+            }
+        ), 200)
+
 @app.route('/user', methods=['POST', 'GET'])
 def user():
     
