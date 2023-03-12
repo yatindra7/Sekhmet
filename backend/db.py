@@ -3,14 +3,13 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-import sys
 import os
 
 from dotenv import load_dotenv
 load_dotenv()
 
-if len(sys.argv) != 2:
-    print("Usage: db.py <db_name>.db")
+# if len(sys.argv) != 2:
+#     print("Usage: db.py <db_name>.db")
 
 # give as first argument
 dbname = os.getenv('DBNAME')

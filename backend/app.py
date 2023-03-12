@@ -6,13 +6,12 @@ from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 
 from dotenv import load_dotenv
-import sys
 import os
 
 load_dotenv()
 
-if len(sys.argv) != 2:
-    print("Usage: app.py <db_name>.db")
+# if len(sys.argv) != 2:
+#     print("Usage: app.py <db_name>.db")
 
 # give as first argument
 dbname = os.getenv('DBNAME')
