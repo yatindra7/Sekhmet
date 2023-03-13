@@ -1,4 +1,4 @@
-name: Hitting the cronjob endpoint every day at 00:00 UTC(05:30 IST) to notify all physicians
+name: Hitting the cronjob endpoint every day at 06:00 UTC(11:30 IST) to notify all physicians
 
 on:
   schedule:
