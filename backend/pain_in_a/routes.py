@@ -10,6 +10,9 @@ import os
 
 from uuid import uuid4
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 SPACES_KEY = os.getenv('SPACES_KEY')
 SPACES_SECRET = os.getenv('SPACES_SECRET')
 
@@ -783,7 +786,39 @@ def appointment_id(id):
 @app.route('/notify')
 def notify():
 
-    # todo
+    physicians = [sqlalchemy_row_to_dict(physician) for physician in Physician.query.all()]
+
+    for physician in physicians:
+        patients = [sqlalchemy_row_to_dict(patient) for patient in Patient.query.filter(Patient.PCP == physician["EmployeeID"]).all()]
+        status = ''
+        for patient in patients:
+            status += '<p>'
+            status += patient["Name"]
+            status += ' : '
+            patient_stays = Stay.query.filter_by(Patient = patient["SSN"]).first()
+            if patient_stays is None or patient_stays.End is None:
+                status += 'admitted'
+            else:
+                status += 'discharged'
+            status += '</p>'
+        if len(status) != 0:
+            user = User.query.filter_by(id = physician["EmployeeID"]).first()
+            if user is not None:
+                message = Mail(
+                    from_email='cghosh828049@gmail.com',
+                    to_emails=user.email,
+                    subject='Patients Status',
+                    html_content='<strong>Here are the status of your patients</strong>' + status)
+                
+                try:
+                    sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+                    sg.send(message)
+                except Exception as e:
+                    print(e)
 
     # send mails
-    return 'NOTIFY MAILS'
+    return make_response(
+        jsonify({
+            "message": "Sent emails"
+        }), 200
+    )
