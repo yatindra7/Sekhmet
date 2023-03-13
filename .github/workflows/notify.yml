@@ -1,8 +1,8 @@
-name: Hitting the cronjob endpoint every day at 06:00 UTC(11:30 IST) to notify all physicians
+name: Hitting the cronjob endpoint every day at 12:00 to notify all physicians
 
 on:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: "0 12 * * *"
 jobs:
   build:
     name: Send a GET request via wget
