@@ -2,7 +2,7 @@ name: Hitting the cronjob endpoint every day at 00:00 UTC(05:30 IST) to notify a
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 6 * * *"
 jobs:
   build:
     name: Send a GET request via wget
