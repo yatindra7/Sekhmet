@@ -5,6 +5,7 @@
 <br/>
 
 ## Routes
+- `deployed at`: https://sekhmet.vercel.app
 
 - `/user`:
     - GET: get all users in db
