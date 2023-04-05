@@ -37,7 +37,7 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 # the routes
-from pain_in_a.routes import *
+from routes import *
 
 if __name__ == '__main__':
     app.run(debug=False)
